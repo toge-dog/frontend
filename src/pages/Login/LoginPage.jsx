@@ -3,6 +3,44 @@ import { Container, Form, Button } from 'react-bootstrap';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
+const LoginPage = () => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
+  return (
+    <StyledContainer>
+      <StyledForm onSubmit={handleSubmit}>
+        <Title>로그인</Title>
+        <p style={{textAlign: 'center', marginBottom: '30px'}}>함께걷개 방문을 환영합니다!</p>
+        <StyledInput 
+          type="text" 
+          placeholder="아이디" 
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <StyledInput 
+          type="password" 
+          placeholder="비밀번호" 
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <StyledButton type="submit">
+          로그인
+        </StyledButton>
+        <LinkContainer>
+          <StyledLink to="/members/find-id">아이디찾기</StyledLink>
+          <StyledLink to="/members/find-pw">비밀번호찾기</StyledLink>
+          <StyledLink to="/signup">회원가입</StyledLink>
+        </LinkContainer>
+      </StyledForm>
+    </StyledContainer>
+  );
+};
+
 const StyledContainer = styled(Container)`
   max-width: 400px;
   margin-top: 50px;
@@ -49,44 +87,5 @@ const LinkContainer = styled.div`
   justify-content: space-between;
   margin-top: 20px;
 `;
-
-const LoginPage = () => {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log('Login attempt with:', username, password);
-  };
-
-  return (
-    <StyledContainer>
-      <StyledForm onSubmit={handleSubmit}>
-        <Title>로그인</Title>
-        <p style={{textAlign: 'center', marginBottom: '30px'}}>함께걷개 방문을 환영합니다!</p>
-        <StyledInput 
-          type="text" 
-          placeholder="아이디" 
-          value={username}
-          onChange={(e) => setUsername(e.target.value)}
-        />
-        <StyledInput 
-          type="password" 
-          placeholder="비밀번호" 
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <StyledButton type="submit">
-          로그인
-        </StyledButton>
-        <LinkContainer>
-          <StyledLink to="/find-id">아이디찾기</StyledLink>
-          <StyledLink to="/find-password">비밀번호찾기</StyledLink>
-          <StyledLink to="/signup">회원가입</StyledLink>
-        </LinkContainer>
-      </StyledForm>
-    </StyledContainer>
-  );
-};
 
 export default LoginPage;
