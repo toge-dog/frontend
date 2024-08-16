@@ -2,11 +2,12 @@ import React from 'react'
 import logo from '../assets/logo.png'
 import { Container } from 'react-bootstrap'
 import { Link, NavLink, Outlet } from 'react-router-dom'
+import Footer from '../components/Footer'
 import styled from 'styled-components'
 
 const AppLayout = () => {
     return (
-      <>
+      <PageWrapper>
         <StyledNavbar>
           <NavbarContainer>
             <Link to="/">
@@ -21,10 +22,19 @@ const AppLayout = () => {
             <LoginButton to="/login">로그인</LoginButton>
           </NavbarContainer>
         </StyledNavbar>
-        <Outlet />
-      </>
+        <MainContent>
+          <Outlet />
+        </MainContent>
+        <Footer />
+      </PageWrapper>
     )
   }
+
+const PageWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+`
 
 const StyledNavbar = styled.nav`
   background-color: white;
@@ -73,6 +83,11 @@ const LoginButton = styled(NavLink)`
     background-color: #007bff;
     border-color: #007bff;
   }
+`
+
+const MainContent = styled.main`
+  flex: 1;
+  padding: 40px 0;
 `
 
 export default AppLayout
