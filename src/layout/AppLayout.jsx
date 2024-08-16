@@ -4,7 +4,29 @@ import { Container, Button } from 'react-bootstrap'
 import { Link, Outlet } from 'react-router-dom'
 import styled from 'styled-components'
 
-const StyledNavbar = styled.nav`
+const AppLayout = () => {
+    return (
+      <>
+        <StyledNavbar>
+          <NavbarContainer>
+            <Link to="/">
+              <Logo src={logo} alt="Logo" />
+            </Link>
+            <NavLinks>
+              <NavLink to="/boards/R">매칭 후기</NavLink>
+              <NavLink to="/boards/B">자랑</NavLink>
+              <NavLink to="/boards/A">공지사항</NavLink>
+              <NavLink to="/boards/I">신고/문의</NavLink>
+            </NavLinks>
+            <LoginButton to="/login">로그인</LoginButton>
+          </NavbarContainer>
+        </StyledNavbar>
+        <Outlet />
+      </>
+    )
+  }
+
+  const StyledNavbar = styled.nav`
   background-color: white;
   padding: 10px 0;
 `
@@ -50,27 +72,5 @@ const LoginButton = styled(Link)`
     color: white;
   }
 `
-
-const AppLayout = () => {
-    return (
-      <>
-        <StyledNavbar>
-          <NavbarContainer>
-            <Link to="/">
-              <Logo src={logo} alt="Logo" />
-            </Link>
-            <NavLinks>
-              <NavLink to="/boards/R">매칭 후기</NavLink>
-              <NavLink to="/boards/B">자랑</NavLink>
-              <NavLink to="/boards/A">공지사항</NavLink>
-              <NavLink to="/boards/I">신고/문의</NavLink>
-            </NavLinks>
-            <LoginButton to="/login">로그인</LoginButton>
-          </NavbarContainer>
-        </StyledNavbar>
-        <Outlet />
-      </>
-    )
-  }
 
 export default AppLayout
