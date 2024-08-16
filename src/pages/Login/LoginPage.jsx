@@ -67,25 +67,28 @@ const StyledButton = styled(Button)`
   width: 100%;
   background-color: #e57373;
   border-color: #e57373;
-  &:hover {
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  
+  &:hover, &:focus, &:active, &:active:focus {
     background-color: #ef5350;
     border-color: #ef5350;
   }
+`;
+
+const LinkContainer = styled.div`
+  display: flex;
+  justify-content: center; // 중앙 정렬로 변경
+  margin-top: 20px;
 `;
 
 const StyledLink = styled(Link)`
   color: #757575;
   text-decoration: none;
   font-size: 0.9em;
+  margin: 0 10px; // 좌우 여백 추가
   &:hover {
     text-decoration: underline;
   }
-`;
-
-const LinkContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
 `;
 
 export default LoginPage;
