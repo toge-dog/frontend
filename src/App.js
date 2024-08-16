@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
+import Kakao from './components/Kakao';
 import AppLayout from './layout/AppLayout';
 import HomePage from './pages/HomePage/HomePage';
 import BoardPage from './pages/BoardPage/BoardPage';
