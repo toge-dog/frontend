@@ -1,18 +1,24 @@
 import React, { useState } from 'react';
 import { Container, Form, Button } from 'react-bootstrap';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const SignUpTermsPage = () => {
   const [agreeTerms, setAgreeTerms] = useState(false);
   const [agreePrivacy, setAgreePrivacy] = useState(false);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (agreeTerms && agreePrivacy) {
-      
+      navigate('/sign-up/info');
     } else {
       alert("모든 약관에 동의해주세요.");
     }
+  };
+
+  const handleCancel = () => {
+    navigate('/login');
   };
 
   return (
@@ -67,9 +73,14 @@ const SignUpTermsPage = () => {
           />
         </TermsSection>
 
-        <StyledButton type="submit">
-          다음
-        </StyledButton>
+        <ButtonGroup>
+          <CancelButton type="button" onClick={handleCancel}>
+            취소
+          </CancelButton>
+          <ConfirmButton type="submit">
+            확인
+          </ConfirmButton>
+        </ButtonGroup>
       </StyledForm>
     </StyledContainer>
   );
@@ -118,13 +129,31 @@ const TermsContent = styled.div`
   color: #4a4a4a;
 `;
 
-const StyledButton = styled(Button)`
-  width: 100%;
+const ButtonGroup = styled.div`
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+`;
+
+const BaseButton = styled(Button)`
+  width: 48%;
+`;
+
+const CancelButton = styled(BaseButton)`
+  background-color: white;
+  color: #e57373;
+  border: 1px solid #e57373;
+  &:hover {
+    background-color: #f8f8f8;
+    color: #ef5350;
+    border-color: #ef5350;
+  }
+`;
+
+const ConfirmButton = styled(BaseButton)`
   background-color: #e57373;
   border-color: #e57373;
-  transition: background-color 0.3s ease, border-color 0.3s ease;
-  
-  &:hover, &:focus, &:active, &:active:focus {
+  &:hover {
     background-color: #ef5350;
     border-color: #ef5350;
   }

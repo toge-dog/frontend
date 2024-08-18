@@ -9,6 +9,7 @@ import FindIdPage from './pages/FindPage/FindIdPage';
 import FindPasswordInitPage from './pages/FindPage/FindPasswordInitPage';
 import FindPasswordResetPage from './pages/FindPage/FindPasswordResetPage';
 import SignUpTermsPage from './pages/SignUp/SignUpTermsPage'
+import SignUpInfoPage from './pages/SignUp/SignUpInfoPage'
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -20,8 +21,9 @@ function App() {
           <Route path=":boardType" element={<BoardPage />}/>
         </Route>
         <Route path="login" element={<LoginPage />}/>
-        <Route path="signup" element={<SignUpTermsPage />} >
-          
+        <Route path="sign-up">
+          <Route path="" element={<SignUpTermsPage />} />
+          <Route path="info" element={<SignUpInfoPage />} />
         </Route>
         <Route path="members/find-id" element={<FindIdPage />}/>
         <Route path="members/find-pw" element={<FindPasswordInitPage />}/>
