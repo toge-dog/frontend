@@ -77,7 +77,7 @@ const StyledButton = styled(Button)`
 
 const LinkContainer = styled.div`
   display: flex;
-  justify-content: center; // 중앙 정렬로 변경
+  justify-content: center;
   margin-top: 20px;
 `;
 
@@ -85,7 +85,7 @@ const StyledLink = styled(Link)`
   color: #757575;
   text-decoration: none;
   font-size: 0.9em;
-  margin: 0 10px; // 좌우 여백 추가
+  margin: 0 10px;
   &:hover {
     text-decoration: underline;
   }

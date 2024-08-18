@@ -65,23 +65,17 @@ const StyledNavLink = styled(NavLink)`
 `
 
 const LoginButton = styled(NavLink)`
-  background-color: #007bff;
-  border-color: #007bff;
+  background-color: #79c283dd;
+  border-color: #79c283dd;
   color: white;
   padding: 0.375rem 0.75rem;
   border-radius: 0.25rem;
   text-decoration: none;
   transition: all 0.3s ease;
-  
-  &:hover {
-    background-color: #0056b3;
-    border-color: #0056b3;
-    color: white;
-  }
 
   &.active {
-    background-color: #007bff;
-    border-color: #007bff;
+    background-color: #79c283dd;
+    border-color: #79c283dd;
   }
 `
 
