@@ -1,6 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import './App.css';
-import Kakao from './components/Kakao';
+import KakaoMap from './components/Kakao';
 import AppLayout from './layout/AppLayout';
 import HomePage from './pages/HomePage/HomePage';
 import BoardPage from './pages/BoardPage/BoardPage';
@@ -16,13 +16,18 @@ import SignUpPetPage from './pages/SignUp/SignUpPetPage';
 
 function App() {
   return (
+
     <Routes>
 
       <Route path='/' element={<AppLayout />}>
-        <Route index element={<HomePage />}/>
+        <Route index element={<HomePage />} />
         <Route path="boards">
-          <Route path=":boardType" element={<BoardPage />}/>
+          <Route path=":boardType" element={<BoardPage />} />
         </Route>
+        <Route path="login" element={<LoginPage />} />
+        <Route path="members/find-id" element={<FindIdPage />} />
+        <Route path="members/find-pw" element={<FindPasswordInitPage />} />
+        <Route path="members/find-pw/:memberId" element={<FindPasswordResetPage />} />
 
         <Route path="login" element={<LoginPage />}/>
         <Route path="sign-up">
@@ -37,8 +42,8 @@ function App() {
 
         <Route path="*" element={<NotFoundPage />}/>
       </Route>
+      <Route path="map" element={<KakaoMap/>} /> 
     </Routes>
   );
 }
-
 export default App;

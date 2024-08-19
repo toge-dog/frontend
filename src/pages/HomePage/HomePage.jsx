@@ -6,7 +6,11 @@ import KakaoMap from '../../components/Kakao'
 const HomePage = () => {
   return (
     <div>
+
       <BannerImage src={banner} alt="Home Banner" />
+      <KakaoMap/>
+
+
       <KakaoMap />
     </div>
   )
