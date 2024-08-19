@@ -8,7 +8,6 @@ export const useBoostQuery = () => {
     return useQuery({
         queryKey:['boost-popular'],
         queryFn: fetchPopularBoost,
-        select: (result) => result.data,
-
+        select: (result) => result.data
     })
 }
