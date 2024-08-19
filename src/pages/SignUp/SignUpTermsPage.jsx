@@ -11,7 +11,7 @@ const SignUpTermsPage = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (agreeTerms && agreePrivacy) {
-      navigate('/sign-up/info');
+      navigate('/sign-up/members');
     } else {
       alert("모든 약관에 동의해주세요.");
     }

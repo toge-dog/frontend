@@ -1,5 +1,5 @@
-import React, { useState, useRef } from 'react';
-import { Container, Form, Button, Modal, Image } from 'react-bootstrap';
+import React, { useState } from 'react';
+import { Container, Form, Button, Modal } from 'react-bootstrap';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import DaumPostcode from 'react-daum-postcode';
@@ -12,20 +12,16 @@ const SignUpInfoPage = () => {
       memberNickname: '',
       memberEmail: '',
       memberPassword: '',
-      passwordConfirm: '',
       memberPhone: '',
       memberBirth: '',
       memberMainAddress: '',
       memberDetailsAddress: '',
-      memberGender: '',
-      memberProfile: null
+      memberGender: ''
     });
 
-  const [profilePreview, setProfilePreview] = useState(null);
-  const [errors, setErrors] = useState({});
-  const [showAddressModal, setShowAddressModal] = useState(false);
-  const [passwordConfirm, setPasswordConfirm] = useState('');
-  const fileInputRef = useRef(null);
+    const [errors, setErrors] = useState({});
+    const [showAddressModal, setShowAddressModal] = useState(false);
+    const [passwordConfirm, setPasswordConfirm] = useState('');
 
   const validateField = (name, value) => {
     let error = '';
@@ -42,10 +38,10 @@ const SignUpInfoPage = () => {
         break;
       case 'passwordConfirm':
         if (value !== formData.memberPassword) {
-          error = '비밀번호가 일치하지 않습니다.';
+            error = '비밀번호가 일치하지 않습니다.';
         }
         break;
-    case 'memberPhone':
+      case 'memberPhone':
         if (!/^010-\d{3,4}-\d{4}$/.test(value)) {
             error = '올바른 전화번호 형식이 아닙니다. (예: 010-1234-5678)';
         }
@@ -55,12 +51,12 @@ const SignUpInfoPage = () => {
           error = '생년월일은 8자리 숫자로 입력해주세요. (예: 19990101)';
         }
         break;
-      case 'address':
+      case 'memberMainAddress':
         if (!value) {
           error = '주소를 입력해주세요.';
         }
         break;
-      case 'gender':
+      case 'memberGender':
         if (!value) {
           error = '성별을 선택해주세요.';
         }
@@ -77,27 +73,14 @@ const SignUpInfoPage = () => {
     if (name === 'memberPhone') {
       const phoneNumber = value.replace(/[^\d-]/g, '').slice(0, 13);
       setFormData(prevState => ({ ...prevState, [name]: phoneNumber }));
+    } else if (name === 'passwordConfirm') {
+      setPasswordConfirm(value);
     } else {
       setFormData(prevState => ({ ...prevState, [name]: value }));
     }
-  
-    const error = validateField(name, value);
+    
+    const error = validateField(name, name === 'passwordConfirm' ? value : formData[name]);
     setErrors(prevErrors => ({ ...prevErrors, [name]: error }));
-  };
-
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setFormData(prevState => ({
-        ...prevState,
-        memberProfile: file
-      }));
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setProfilePreview(reader.result);
-      };
-      reader.readAsDataURL(file);
-    }
   };
 
   const handleBlur = (e) => {
@@ -121,68 +104,32 @@ const SignUpInfoPage = () => {
     e.preventDefault();
     const newErrors = {};
     Object.keys(formData).forEach(key => {
-      const error = validateField(key, formData[key]);
-      if (error) newErrors[key] = error;
+        const error = validateField(key, formData[key]);
+        if (error) newErrors[key] = error;
     });
 
-    if (formData.memberPassword !== passwordConfirm) {
-        newErrors.passwordConfirm = '비밀번호가 일치하지 않습니다.';
-      }
+    const passwordConfirmError = validateField('passwordConfirm', passwordConfirm);
+    if (passwordConfirmError) {
+        newErrors.passwordConfirm = passwordConfirmError;
+    }
 
-      if (Object.keys(newErrors).length === 0) {
+    if (Object.keys(newErrors).length === 0) {
         try {
-          const formDataToSend = new FormData();
-          Object.keys(formData).forEach(key => {
-            if (key === 'memberProfile') {
-              if (formData[key]) {
-                formDataToSend.append(key, formData[key]);
-              }
-            } else {
-              formDataToSend.append(key, formData[key]);
-            }
-          });
-    
-          const response = await axios.post('http://localhost:8000/sign-up', formDataToSend, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          });
-          navigate('/sign-up/additional-info');
+            const response = await axios.post('http://localhost:8000/sign-up/members', formData);
+            navigate('/sign-up/pets', { state: { memberId: response.data.memberId } });
         } catch (error) {
-          alert('회원가입에 실패했습니다. 다시 시도해주세요.');
+            console.error('회원가입 오류:', error);
+            alert('회원가입에 실패했습니다. 다시 시도해주세요.');
         }
-      } else {
+    } else {
         setErrors(newErrors);
-      }
-    };
-
-    const handleFileButtonClick = () => {
-        fileInputRef.current.click();
-      };
+    }
+  };
 
   return (
     <StyledContainer>
       <StyledForm onSubmit={handleSubmit}>
         <Title>견주님의 정보를 입력주세요</Title>
-
-        <InputGroup>
-          <ProfileImageWrapper>
-            {profilePreview ? (
-              <ProfileImage src={profilePreview} alt="Profile Preview" />
-            ) : (
-              <DefaultProfileImage>프로필 이미지</DefaultProfileImage>
-            )}
-          </ProfileImageWrapper>
-          <HiddenFileInput
-            type="file"
-            accept="image/*"
-            onChange={handleFileChange}
-            ref={fileInputRef}
-          />
-          <FileUploadButton type="button" onClick={handleFileButtonClick}>
-            {formData.memberProfile ? '이미지 변경' : '이미지 선택'}
-          </FileUploadButton>
-        </InputGroup>
 
         <InputGroup>
           <StyledInput
@@ -245,7 +192,7 @@ const SignUpInfoPage = () => {
             type="password"
             name="passwordConfirm"
             placeholder="비밀번호 확인"
-            value={formData.passwordConfirm}
+            value={passwordConfirm}
             onChange={handleChange}
             onBlur={handleBlur}
             isInvalid={!!errors.passwordConfirm}
@@ -358,47 +305,6 @@ const Title = styled.h4`
   margin-bottom: 30px;
 `;
 
-const IconWrapper = styled.div`
-  text-align: center;
-  margin-bottom: 30px;
-  img {
-    width: 100px;
-    height: auto;
-  }
-`;
-
-const ProfileImageWrapper = styled.div`
-  width: 150px;
-  height: 150px;
-  margin: 0 auto 20px;
-  border-radius: 50%;
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f0f0;
-`;
-
-const ProfileImage = styled(Image)`
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-`;
-
-const DefaultProfileImage = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-size: 14px;
-  color: #666;
-`;
-
-const FileInput = styled(Form.Control)`
-  margin-top: 10px;
-`;
-
 const InputGroup = styled.div`
   margin-bottom: 25px;
 `;
@@ -430,21 +336,6 @@ const NextButton = styled(Button)`
 const AddressButton = styled(Button)`
   margin-top: 10px;
   width: 100%;
-  background-color: #4a90e2;
-  border-color: #4a90e2;
-  &:hover {
-    background-color: #357ae8;
-    border-color: #357ae8;
-  }
-`;
-
-const HiddenFileInput = styled.input`
-  display: none;
-`;
-
-const FileUploadButton = styled(Button)`
-  width: 100%;
-  margin-top: 10px;
   background-color: #4a90e2;
   border-color: #4a90e2;
   &:hover {

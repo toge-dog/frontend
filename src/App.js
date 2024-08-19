@@ -12,6 +12,7 @@ import SignUpTermsPage from './pages/SignUp/SignUpTermsPage'
 import SignUpInfoPage from './pages/SignUp/SignUpInfoPage'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import NotFoundPage from './pages/ErrorPage/NotFoundPage';
+import SignUpPetPage from './pages/SignUp/SignUpPetPage';
 
 function App() {
   return (
@@ -26,7 +27,8 @@ function App() {
         <Route path="login" element={<LoginPage />}/>
         <Route path="sign-up">
           <Route path="" element={<SignUpTermsPage />} />
-          <Route path="info" element={<SignUpInfoPage />} />
+          <Route path="members" element={<SignUpInfoPage />} />
+          <Route path="pets" element={<SignUpPetPage />} />
         </Route>
 
         <Route path="members/find-id" element={<FindIdPage />}/>

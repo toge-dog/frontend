@@ -1,11 +1,13 @@
 import React from 'react'
 import styled from 'styled-components'
 import banner from '../../assets/banner.jpg'
+import KakaoMap from '../../components/Kakao'
 
 const HomePage = () => {
   return (
     <div>
       <BannerImage src={banner} alt="Home Banner" />
+      <KakaoMap />
     </div>
   )
 }
