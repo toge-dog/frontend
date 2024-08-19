@@ -8,20 +8,34 @@ import LoginPage from './pages/Login/LoginPage';
 import FindIdPage from './pages/FindPage/FindIdPage';
 import FindPasswordInitPage from './pages/FindPage/FindPasswordInitPage';
 import FindPasswordResetPage from './pages/FindPage/FindPasswordResetPage';
+import SignUpTermsPage from './pages/SignUp/SignUpTermsPage'
+import SignUpInfoPage from './pages/SignUp/SignUpInfoPage'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import NotFoundPage from './pages/ErrorPage/NotFoundPage';
+import SignUpPetPage from './pages/SignUp/SignUpPetPage';
 
 function App() {
   return (
     <Routes>
+
       <Route path='/' element={<AppLayout />}>
         <Route index element={<HomePage />}/>
         <Route path="boards">
           <Route path=":boardType" element={<BoardPage />}/>
         </Route>
+
         <Route path="login" element={<LoginPage />}/>
-          <Route path="members/find-id" element={<FindIdPage />}/>
-          <Route path="members/find-pw" element={<FindPasswordInitPage />}/> {/* 사용자 식별 정보를 입력받는 초기 단계 */}
-          <Route path="members/find-pw/:memberId" element={<FindPasswordResetPage />}/> {/* 실제 비밀번호 재설정을 수행하는 단계 */}
+        <Route path="sign-up">
+          <Route path="" element={<SignUpTermsPage />} />
+          <Route path="members" element={<SignUpInfoPage />} />
+          <Route path="pets" element={<SignUpPetPage />} />
+        </Route>
+
+        <Route path="members/find-id" element={<FindIdPage />}/>
+        <Route path="members/find-pw" element={<FindPasswordInitPage />}/>
+        <Route path="members/find-pw/:memberId" element={<FindPasswordResetPage />}/>
+
+        <Route path="*" element={<NotFoundPage />}/>
       </Route>
     </Routes>
   );
