@@ -5,6 +5,7 @@ import ReviewPage from '../Review/ReviewPage';
 import NotFoundPage from '../ErrorPage/NotFoundPage';
 import BoostPage from '../Boost/BoostPage';
 import InquiryPage from '../Inquiry/InquiryPage';
+import KakaoMap from '../../components/Kakao';
 
 const BoardPage = () => {
   const { boardType } = useParams();
@@ -22,6 +23,7 @@ const BoardPage = () => {
       default:
         return <NotFoundPage />;
     }
+
   }
 
   return (
