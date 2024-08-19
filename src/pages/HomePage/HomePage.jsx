@@ -10,7 +10,8 @@ const HomePage = () => {
       <BannerImage src={banner} alt="Home Banner" />
       <KakaoMap/>
 
-   
+
+      <KakaoMap />
     </div>
   )
 }

@@ -34,7 +34,7 @@ const LoginPage = () => {
         <LinkContainer>
           <StyledLink to="/members/find-id">아이디찾기</StyledLink>
           <StyledLink to="/members/find-pw">비밀번호찾기</StyledLink>
-          <StyledLink to="/signup">회원가입</StyledLink>
+          <StyledLink to="/sign-up">회원가입</StyledLink>
         </LinkContainer>
       </StyledForm>
     </StyledContainer>
@@ -67,25 +67,28 @@ const StyledButton = styled(Button)`
   width: 100%;
   background-color: #e57373;
   border-color: #e57373;
-  &:hover {
+  transition: background-color 0.3s ease, border-color 0.3s ease;
+  
+  &:hover, &:focus, &:active, &:active:focus {
     background-color: #ef5350;
     border-color: #ef5350;
   }
+`;
+
+const LinkContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
 `;
 
 const StyledLink = styled(Link)`
   color: #757575;
   text-decoration: none;
   font-size: 0.9em;
+  margin: 0 10px;
   &:hover {
     text-decoration: underline;
   }
-`;
-
-const LinkContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 20px;
 `;
 
 export default LoginPage;
