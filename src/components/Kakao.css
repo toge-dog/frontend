@@ -1,25 +1,58 @@
 
 .map-container {
-    position: relative;
-    width: 100%;
-    height: 60vh; 
-  }
-  
-  #map {
-    width: 100%;
-    height: 100%; 
-  }
+  position: relative;
+  width: 100%;
+  height: 80vh; 
+  margin-bottom: 80px;
+}
 
-  .return-current-location {
-    position: absolute; 
-    bottom: 20px;
-    right: 20px; 
-    padding: 10px 20px;
-    background-color: #5dad1c;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    z-index: 1000; /* 지도위에 버튼 있도록 설정  */
-  }
+#map {
+  width: 85%; /* 지도 너비를 85%로 설정 */
+  height: 85%;
+  margin: 0 auto; 
   
+}
+
+.start-matching-button {
+  background-color: #ff5722; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  position: absolute;
+  bottom: 150px; 
+  left: 50%;
+  transform: translateX(-45%);
+  z-index: 1000; 
+}
+
+.return-current-location {
+  background-color: #4caf50; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  position: absolute;
+  bottom: 130px; 
+  right: 300px; 
+  z-index: 1000;
+}
+
+
+.create-marker-button {
+  background-color: #2196f3; 
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  position: absolute;
+  bottom: 130px; 
+  left: 300px; 
+  z-index: 1000;
+}

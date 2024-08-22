@@ -29,6 +29,7 @@ const HomePage = () => {
   return (
     <div>
       <BannerImage src={banner} alt="Home Banner" />
+
       {isLoggedIn && user ? (
         <UserInfoContainer>
           <h2>환영합니다, {user.name || user.nickName || '사용자'}님!</h2>
@@ -46,6 +47,7 @@ const HomePage = () => {
         null
       )}
       <KakaoMap />
+
     </div>
   );
 };
