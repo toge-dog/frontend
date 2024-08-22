@@ -44,7 +44,7 @@ const AppLayout = () => {
             </NavLinks>
             {user ? (
               <UserActions>
-                <UserName>{user.name} 님</UserName>
+                <UserName>{user.nickName} 님</UserName>
                 <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
                 {console.log("user", user)}
               </UserActions>
