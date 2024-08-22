@@ -43,7 +43,7 @@ const HomePage = () => {
           <LogoutButton onClick={logout}>로그아웃</LogoutButton>
         </UserInfoContainer>
       ) : (
-        <LoginLink to="/login">아</LoginLink>
+        null
       )}
       <KakaoMap />
     </div>
