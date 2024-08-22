@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 import axios from 'axios';
 import { Container, Title, Table, Th, Td, WriteButton, GridContainer, GridItem, ImageContainer, AuthorName, Pagination, PageButton } from './BoardStyles';
 
@@ -10,6 +11,7 @@ const BoardPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [isAdmin, setIsAdmin] = useState(false); // 관리자 권한 상태값
   const navigate = useNavigate();
+  const { isLoggedIn } = useAuth();
   const { boardType } = useParams();
 
   const postsPerPage = boardType === 'B' ? 6 : 10;
@@ -17,7 +19,8 @@ const BoardPage = () => {
   useEffect(() => {
     fetchPosts();
     checkAdminStatus(); // 관리자 권한 확인
-  }, [boardType, currentPage]);
+  }, [boardType, currentPage, isLoggedIn]);
+  
 
   const fetchPosts = async () => {
     setLoading(true);
@@ -51,6 +54,16 @@ const BoardPage = () => {
       case 'A': return '공지사항';
       case 'I': return '신고/문의';
       default: return '게시판';
+    }
+  };
+
+  const handleWriteClick = () => {
+    console.log(isLoggedIn);
+    if (isLoggedIn) {
+      navigate(`/boards/${boardType}/write`);
+    } else {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/login', { state: { from: `/boards/${boardType}` } });
     }
   };
 
@@ -128,7 +141,7 @@ const BoardPage = () => {
       {boardType === 'B' ? renderBoastBoard() : renderOtherBoard()}
       {renderPagination()}
       {(boardType !== 'A' || (boardType === 'A' && isAdmin)) && (
-        <WriteButton onClick={() => navigate(`/boards/${boardType}/write`)}>글쓰기</WriteButton>
+        <WriteButton onClick={handleWriteClick}>글쓰기</WriteButton>
       )}
     </Container>
   );

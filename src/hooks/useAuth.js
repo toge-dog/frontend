@@ -4,7 +4,9 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 export const useAuth = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(() => {
+        return localStorage.getItem('token') !== null;
+      });
   const [user, setUser] = useState(null);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
