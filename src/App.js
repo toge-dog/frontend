@@ -10,9 +10,10 @@ import FindPasswordInitPage from './pages/FindPage/FindPasswordInitPage';
 import FindPasswordResetPage from './pages/FindPage/FindPasswordResetPage';
 import SignUpTermsPage from './pages/SignUp/SignUpTermsPage'
 import SignUpInfoPage from './pages/SignUp/SignUpInfoPage'
-import 'bootstrap/dist/css/bootstrap.min.css';
 import NotFoundPage from './pages/ErrorPage/NotFoundPage';
-import SignUpPetPage from './pages/SignUp/SignUpPetPage';
+import BoardDetailPage from './pages/BoardPage/BoardDetailPage';
+import BoardWritePage from './pages/BoardPage/BoardWritePage';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
@@ -22,7 +23,9 @@ function App() {
       <Route path='/' element={<AppLayout />}>
         <Route index element={<HomePage />} />
         <Route path="boards">
-          <Route path=":boardType" element={<BoardPage />} />
+        <Route path="/boards/:boardType" element={<BoardPage />} />
+        <Route path="/boards/:boardType/write" element={<BoardWritePage />} />
+        <Route path="/boards/:boardType/:id" element={<BoardDetailPage />} />
         </Route>
         <Route path="login" element={<LoginPage />} />
         <Route path="members/find-id" element={<FindIdPage />} />
@@ -31,9 +34,8 @@ function App() {
 
         <Route path="login" element={<LoginPage />}/>
         <Route path="sign-up">
-          <Route path="" element={<SignUpTermsPage />} />
+          <Route index element={<SignUpTermsPage />} />
           <Route path="members" element={<SignUpInfoPage />} />
-          <Route path="pets" element={<SignUpPetPage />} />
         </Route>
 
         <Route path="members/find-id" element={<FindIdPage />}/>
