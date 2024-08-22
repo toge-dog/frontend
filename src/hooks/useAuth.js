@@ -12,16 +12,19 @@ export const useAuth = () => {
   const loginMutation = useMutation({
     mutationFn: async (credentials) => {
       const response = await axios.post('http://localhost:8080/login', credentials);
-      return response.data;
+      const userData = await axios.get('http://localhost:8080/member', { headers: {"Authorization":response.headers['authorization']}});
+      return {
+        token: response.headers['authorization'],
+        user: userData.data.data
+      };
     },
     onSuccess: (data) => {
-      console.log(data);
-      const { token, user } = data;
-      localStorage.setItem('token', token);
-      setUser(user);
-      setIsLoggedIn(true);
-      queryClient.setQueryData(['user'], user);
-      navigate('/'); // 로그인 성공 후 홈으로 리다이렉트
+        const { token, user } = data;
+        localStorage.setItem('token', token);    
+        setUser(user);
+        setIsLoggedIn(true);
+        queryClient.setQueryData(['user'], user);
+        navigate('/'); // 로그인 성공 후 홈으로 리다이렉트
     },
     onError: (error) => {
       console.error('로그인 실패:', error);
