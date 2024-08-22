@@ -11,7 +11,6 @@ const HomePage = () => {
       <KakaoMap/>
 
 
-      <KakaoMap />
     </div>
   )
 }

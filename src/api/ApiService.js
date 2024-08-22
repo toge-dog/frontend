@@ -1,22 +1,16 @@
-import axios from "axios";
+// import express from 'express';
+// const app = express();
+// const port = 8080;
+// app.use(express.json());
 
+// app.post('/api/currentLocation', (req, res) => {
+//     const { latitude, longitude } = req.body;
+//     console.log(`Received coordinates: Latitude ${latitude}, Longitude ${longitude}`);
 
-const fetchData = async () => {
-    try {
-        const response = await axios.get('http://localhost:3000/map/data');
-        console.log('Response:', response.data);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-};
+//     res.json({ success: true, latitude, longitude });
+// });
 
-//get 요청 보내기 
-fetchData();
-
-
-// const apiService = axios.create({
-//     baseURL: 'http://localhost:3000', // 기본 URL 설정
-//     timeout: 1000, 
-    
-
+// // 서버 시작
+// app.listen(port, () => {
+//     console.log(`Server is running on http://localhost:${port}`);
 // });
