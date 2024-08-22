@@ -67,6 +67,18 @@ const BoardPage = () => {
     }
   };
 
+  const handleSubmitButtonClick = async () => {
+    try {
+      // 게시글 저장 로직이 필요하다면 여기에 추가
+      // 예: await axios.post('http://localhost:8080/boards', postData);
+
+      // 작성 완료 후 게시글 목록 다시 불러오기
+      fetchPosts();
+    } catch (error) {
+      console.error('게시글 저장 실패:', error);
+    }
+  };
+
   const renderBoastBoard = () => (
     <GridContainer>
       {posts.map((post) => (
