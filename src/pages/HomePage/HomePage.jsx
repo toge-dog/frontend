@@ -32,7 +32,7 @@ const HomePage = () => {
 
       {isLoggedIn && user ? (
         <UserInfoContainer>
-          <h2>환영합니다, {user.name || user.nickName || '사용자'}님!</h2>
+          <h2>환영합니다, {user.nickName}님!</h2>
           {pet && (
             <PetInfo>
               <h3>반려견 정보: {pet.petName}</h3>
