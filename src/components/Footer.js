@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import logo from '../assets/logo.png'
+import logo from '../assets/logo_remove.png'
 import { FaYoutube, FaComments } from 'react-icons/fa';
 
 const Footer = () => {
@@ -10,7 +10,7 @@ const Footer = () => {
       <ContentWrapper>
         <LogoSection>
           <Logo src={logo} alt="Logo" />
-          <LogoText>함께걷개</LogoText>
+          <LogoText></LogoText>
         </LogoSection>
         <InfoSection>
           <ContactSection>

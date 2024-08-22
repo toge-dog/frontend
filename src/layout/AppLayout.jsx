@@ -1,11 +1,34 @@
 import React from 'react'
 import logo from '../assets/logo.png'
 import { Container } from 'react-bootstrap'
-import { Link, NavLink, Outlet } from 'react-router-dom'
+import { Link, NavLink, Outlet, useNavigate } from 'react-router-dom'
 import Footer from '../components/Footer'
 import styled from 'styled-components'
+import { useQuery, useQueryClient } from '@tanstack/react-query'
 
 const AppLayout = () => {
+
+  const navigate = useNavigate();
+    const queryClient = useQueryClient();
+
+    const { data: user } = useQuery({
+      queryKey: ['user'],
+      queryFn: () => {
+        const userStr = localStorage.getItem('user');
+        return userStr ? JSON.parse(userStr) : null;
+      },
+      staleTime: Infinity,
+    });
+
+    const handleLogout = () => {
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+      localStorage.removeItem('pet');
+      queryClient.setQueryData(['user'], null);
+      queryClient.setQueryData(['pet'], null);
+      navigate('/login');
+    };
+  
     return (
       <PageWrapper>
         <StyledNavbar>
@@ -19,7 +42,15 @@ const AppLayout = () => {
               <StyledNavLink to="/boards/A">공지사항</StyledNavLink>
               <StyledNavLink to="/boards/I">신고/문의</StyledNavLink>
             </NavLinks>
-            <LoginButton to="/login">로그인</LoginButton>
+            {user ? (
+              <UserActions>
+                <UserName>{user.name} 님</UserName>
+                <LogoutButton onClick={handleLogout}>로그아웃</LogoutButton>
+                {console.log("user", user)}
+              </UserActions>
+            ) : (
+              <LoginButton to="/login">로그인</LoginButton>
+            )}
           </NavbarContainer>
         </StyledNavbar>
         <MainContent>
@@ -82,6 +113,29 @@ const LoginButton = styled(NavLink)`
 const MainContent = styled.main`
   flex: 1;
   padding: 40px 0;
+`
+
+const UserActions = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const UserName = styled.span`
+  margin-right: 10px;
+`
+
+const LogoutButton = styled.button`
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 0.375rem 0.75rem;
+  border-radius: 0.25rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #c82333;
+  }
 `
 
 export default AppLayout
