@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -11,18 +11,34 @@ export const useAuth = () => {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
 
+    // 로컬 스토리지에서 사용자 정보 불러오기
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
+
+        if (token && storedUser) {
+            setUser(JSON.parse(storedUser));
+            setIsLoggedIn(true);
+            queryClient.setQueryData(['user'], JSON.parse(storedUser));
+        }
+    }, [queryClient]);
+
     const loginMutation = useMutation({
         mutationFn: async (credentials) => {
             const response = await axios.post('http://localhost:8080/login', credentials);
             const userData = await axios.get('http://localhost:8080/member', { headers: {"Authorization":response.headers['authorization']}});
             return {
                 token: response.headers['authorization'],
-                user: userData.data.data
+                user: userData.data.data,
+                email: userData.data.data.email
             };
         },
         onSuccess: (data) => {
-            const { token, user } = data;
-            localStorage.setItem('token', token);    
+            const { token, user, email } = data;
+            localStorage.setItem('token', token);
+            localStorage.setItem('user', JSON.stringify(user)); // 사용자 정보를 로컬 스토리지에 저장
+            localStorage.setItem('email', email);
+
             setUser(user);
             setIsLoggedIn(true);
             queryClient.setQueryData(['user'], user);
@@ -45,6 +61,7 @@ export const useAuth = () => {
             console.error('로그아웃 요청 실패:', error);
         } finally {
             localStorage.removeItem('token');
+            localStorage.removeItem('user'); // 로그아웃 시 사용자 정보도 삭제
             setUser(null);
             setIsLoggedIn(false);
             queryClient.setQueryData(['user'], null);
