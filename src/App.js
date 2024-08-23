@@ -26,7 +26,7 @@ function App() {
         <Route path="boards">
           <Route path=":boardType" element={<BoardPage />} />
           <Route path=":boardType/write" element={<BoardWritePage />} />
-          <Route path=":boardType/:boardId" element={<BoardDetailPage />} />
+          <Route path=":boardType/:id" element={<BoardDetailPage />} />
         </Route>
 
         <Route path="login" element={<LoginPage />} />
