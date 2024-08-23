@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Container, Title, Table, Th, Td, WriteButton, GridContainer, GridItem, ImageContainer, AuthorName, Pagination, PageButton, ContentContainer } from './BoardStyles';
 
@@ -11,7 +12,7 @@ const BoardPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, getToken } = useAuth();
   const { boardType } = useParams();
   const location = useLocation();
 
@@ -21,25 +22,38 @@ const BoardPage = () => {
     const searchParams = new URLSearchParams(location.search);
     const newPost = searchParams.get('newPost');
     const postId = searchParams.get('postId');
-
+  
     if (newPost === 'true' && postId) {
-      setCurrentPage(1);  // 새 글이 작성되면 첫 페이지로 이동
+      setCurrentPage(1);
       fetchPosts(1);
-      // URL에서 쿼리 파라미터 제거
       navigate(`/boards/${boardType}`, { replace: true });
     } else {
       fetchPosts(currentPage);
     }
-    checkAdminStatus();
-  }, [boardType, location.search, isLoggedIn]);
+  }, [boardType, location.search]);
+
   
 
   const fetchPosts = async (page) => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:8080/boards?type=${boardType}&page=${page}&size=${postsPerPage}`);
-      setPosts(response.data.content || []);
-      setTotalPages(response.data.totalPages || 1);
+      const response = await axios.get(`http://localhost:8080/boards`, {
+        params: {
+          type: boardType,
+          page: page,
+          size: postsPerPage
+        }
+      });
+      // 서버 응답 구조에 따라 적절히 데이터를 변환
+      const formattedPosts = response.data.data.map(post => ({
+        ...post,
+        author: post.author || { nickname: '익명', email: '알 수 없음' },
+        viewCount: post.viewCount || 0,
+        likesCount: post.likesCount || 0,
+        boardStatus: post.boardStatus || '기본 상태'
+      }));
+      setPosts(formattedPosts);
+      setTotalPages(response.data.pageInfo.totalPages || 1);
       setCurrentPage(page);
     } catch (error) {
       console.error('게시글을 불러오는데 실패했습니다:', error);
@@ -48,6 +62,29 @@ const BoardPage = () => {
       setLoading(false);
     }
   };
+
+const fetchUserInfo = async () => {
+  try {
+    const response = await axios.get('http://localhost:8080/member', {
+      headers: {
+        Authorization: `Bearer ${getToken()}`
+      }
+    });
+    return response.data;
+  } catch (error) {
+    console.error('사용자 정보를 가져오는데 실패했습니다:', error);
+    return null;
+  }
+};
+
+const { data: userInfo, isPending: userInfoLoading, isError: userInfoError } = useQuery({
+  queryKey: ['userInfo'],
+  queryFn: fetchUserInfo,
+  enabled: isLoggedIn,
+  staleTime: 5 * 60 * 1000, // 5분
+  gcTime: 60 * 60 * 1000, // 1시간 (v5에서 cacheTime이 gcTime으로 변경됨)
+  retry: 1,
+});
 
   const checkAdminStatus = async () => {
     // 여기에 관리자 권한을 확인하는 로직 추후에 추가
@@ -112,18 +149,20 @@ const BoardPage = () => {
           <Th>번호</Th>
           <Th>제목</Th>
           <Th>작성자</Th>
-          <Th>작성일</Th>
-          {boardType === 'inquiry' && <Th>상태</Th>}
+          <Th>조회수</Th>
+          <Th>좋아요</Th>
+          <Th>상태</Th>
         </tr>
       </thead>
       <tbody>
-        {posts.map((post) => (
-          <tr key={post.board_id} onClick={() => navigate(`/boards/${boardType}/${post.board_id}`)}>
-            <Td>{post.board_id}</Td>
+        {posts.map((post, index) => (
+          <tr key={index} onClick={() => navigate(`/boards/${boardType}/${index + 1}`)}>
+            <Td>{index + 1}</Td>
             <Td>{post.title}</Td>
-            <Td>{post.member_id}</Td>
-            <Td>{new Date(post.created_at).toLocaleDateString()}</Td>
-            {boardType === 'inquiry' && <Td>{post.inquiry_status}</Td>}
+            <Td>{post.author?.nickname || post.author?.email || '알 수 없음'}</Td>
+            <Td>{post.viewCount}</Td>
+            <Td>{post.likesCount}</Td>
+            <Td>{post.boardStatus}</Td>
           </tr>
         ))}
       </tbody>
