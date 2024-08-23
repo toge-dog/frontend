@@ -13,12 +13,13 @@ const SignUpPage = () => {
       gender: '',
       email: '',
       password: '',
+      confirmPassword: '',
       nickName: '',
       phone: '',
       birth: '',
       mainAddress: '',
       detailAddress: '',
-      // Pet 정보
+      // Pet information
       petName: '',
       petPersonality: '',
       petBreed: '',
@@ -27,13 +28,16 @@ const SignUpPage = () => {
       petGender: '',
       petSize: '',
       petProfileImage: null
+
     });
 
     const [errors, setErrors] = useState({});
     const [showAddressModal, setShowAddressModal] = useState(false);
-    const [passwordConfirm, setPasswordConfirm] = useState('');
     const [profilePreview, setProfilePreview] = useState(null);
     const fileInputRef = useRef(null);
+    const [emailVerified, setEmailVerified] = useState(false);
+    const [verificationCode, setVerificationCode] = useState('');
+    const [showVerificationInput, setShowVerificationInput] = useState(false);
 
     const validateField = (name, value) => {
         let error = '';
@@ -58,6 +62,11 @@ const SignUpPage = () => {
               error = '비밀번호는 8자에서 20자 사이여야 합니다.';
             } else if (!/^[a-zA-Z0-9!@#$%^&*()_+\-=\[\]{};':"\\\|,.<>/?`~]+$/.test(value)) {
               error = '비밀번호는 알파벳, 숫자, 특수문자만 포함할 수 있습니다.';
+            }
+            break;
+          case 'confirmPassword':
+            if (value !== formData.password) {
+              error = '비밀번호가 일치하지 않습니다.';
             }
             break;
           case 'nickName':
@@ -118,6 +127,31 @@ const SignUpPage = () => {
         return error;
       };
 
+      const handleSendVerificationCode = async () => {
+        try {
+          await axios.post('http://localhost:8080/auth-code', { email: formData.email });
+          setShowVerificationInput(true);
+          alert('이메일로 인증 코드를 전송했습니다. 인증 코드를 입력하여 회원가입을 완료하세요.');
+        } catch (error) {
+          console.error('인증 코드 전송 실패:', error);
+          alert('인증 코드 전송에 실패했습니다. 다시 시도해주세요.');
+        }
+      };
+  
+      const handleVerifyCode = async () => {
+        try {
+          await axios.post('http://localhost:8080/verify-auth-code', { 
+            email: formData.email, 
+            authCode: verificationCode 
+          });
+          setEmailVerified(true);
+          alert('이메일 인증이 완료되었습니다. 회원가입을 진행하세요.');
+        } catch (error) {
+          console.error('인증 코드 확인 실패:', error);
+          alert('인증 코드가 올바르지 않습니다. 다시 시도해주세요.');
+        }
+      };
+
       const handleFileUpload = async (e) => {
         const file = e.target.files[0];
         if (file) {
@@ -132,7 +166,7 @@ const SignUpPage = () => {
             });
             setFormData(prevState => ({
               ...prevState,
-              petProfileImage: response.data // 이미지 URL 저장
+              petProfileImage: response.data // Save the image URL
             }));
             setProfilePreview(URL.createObjectURL(file));
           } catch (error) {
@@ -164,6 +198,12 @@ const SignUpPage = () => {
         
         const error = validateField(name, formattedValue);
         setErrors(prevErrors => ({ ...prevErrors, [name]: error }));
+
+        // 비밀번호 확인 필드 추가 검증
+      if (name === 'password' || name === 'confirmPassword') {
+        const confirmError = validateField('confirmPassword', name === 'password' ? formData.confirmPassword : value);
+        setErrors(prevErrors => ({ ...prevErrors, confirmPassword: confirmError }));
+      }
       };
 
     const handleFileChange = (e) => {
@@ -191,6 +231,11 @@ const SignUpPage = () => {
 
     const handleSubmit = async (e) => {
       e.preventDefault();
+      if (!emailVerified) {
+        alert('이메일 인증을 완료해주세요.');
+        return;
+      }
+
       const newErrors = {};
       Object.keys(formData).forEach(key => {
         const error = validateField(key, formData[key]);
@@ -204,31 +249,31 @@ const SignUpPage = () => {
             gender: formData.gender,
             email: formData.email,
             password: formData.password,
+            confirmPassword: formData.confirmPassword,
             nickName: formData.nickName,
             phone: formData.phone,
             birth: formData.birth,
             mainAddress: formData.mainAddress,
             detailAddress: formData.detailAddress,
             pets: [{
+              petProfileImage: formData.petProfileImage,
               petName: formData.petName,
               petPersonality: formData.petPersonality,
               petBreed: formData.petBreed,
               petBirth: formData.petBirth,
               petNeutered: formData.petNeutered,
               petGender: formData.petGender,
-              petSize: formData.petSize,
-              petProfileImage: formData.petProfileImage // S3에 업로드된 이미지 URL
+              petSize: formData.petSize
             }]
           };
 
-          const response = await axios.post('http://localhost:8080/sign-up/members', memberData, {
+          await axios.post('http://localhost:8080/members', memberData, {
             headers: {
               'Content-Type': 'application/json'
             },
             withCredentials: true
           });
           
-          // 회원가입 성공 시 로그인 페이지로 redirect
           navigate('/login', { state: { email: formData.email } });
         } catch (error) {
           console.error('회원가입 오류:', error);
@@ -289,7 +334,27 @@ const SignUpPage = () => {
               required
             />
             <ErrorMessage>{errors.email}</ErrorMessage>
+            <Button onClick={handleSendVerificationCode} disabled={emailVerified}>
+              인증 코드 전송
+            </Button>
           </InputGroup>
+
+          {showVerificationInput && (
+            <InputGroup>
+              <StyledInput
+                type="text"
+                placeholder="인증 코드"
+                value={verificationCode}
+                onChange={(e) => setVerificationCode(e.target.value)}
+                isInvalid={!!errors.verificationCode}
+                required
+              />
+              <Button onClick={handleVerifyCode} disabled={emailVerified}>
+                인증 확인
+              </Button>
+              <ErrorMessage>{errors.verificationCode}</ErrorMessage>
+            </InputGroup>
+          )}
 
           <InputGroup>
             <StyledInput
@@ -307,14 +372,14 @@ const SignUpPage = () => {
           <InputGroup>
             <StyledInput
               type="password"
-              name="passwordConfirm"
+              name="confirmPassword"
               placeholder="비밀번호 확인"
-              value={passwordConfirm}
-              onChange={(e) => setPasswordConfirm(e.target.value)}
-              isInvalid={!!errors.passwordConfirm}
+              value={formData.confirmPassword}
+              onChange={handleChange}
+              isInvalid={!!errors.confirmPassword}
               required
             />
-            <ErrorMessage>{errors.passwordConfirm}</ErrorMessage>
+            <ErrorMessage>{errors.confirmPassword}</ErrorMessage>
           </InputGroup>
 
           <InputGroup>
