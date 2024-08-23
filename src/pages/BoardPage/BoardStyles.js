@@ -203,3 +203,25 @@ export const ContentContainer = styled.div`
   margin-bottom: 20px;  // 게시글 목록과 페이지네이션 사이의 간격 조정
   min-height: 300px;  // 최소 높이 설정으로 게시글이 적을 때도 레이아웃 유지
 `;
+
+export const CommentSection = styled.div`
+  margin-top: 20px;
+`;
+
+export const CommentInput = styled.textarea`
+  width: 100%;
+  height: 100px;
+  margin-bottom: 10px;
+  padding: 10px;
+`;
+
+export const CommentSubmitButton = styled.button`
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  cursor: pointer;
+  &:hover {
+    background-color: #45a049;
+  }
+`;
