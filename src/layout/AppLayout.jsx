@@ -37,10 +37,10 @@ const AppLayout = () => {
               <Logo src={logo} alt="Logo" />
             </Link>
             <NavLinks>
-              <StyledNavLink to="/boards/R">매칭 후기</StyledNavLink>
-              <StyledNavLink to="/boards/B">자랑</StyledNavLink>
-              <StyledNavLink to="/boards/A">공지사항</StyledNavLink>
-              <StyledNavLink to="/boards/I">신고/문의</StyledNavLink>
+              <StyledNavLink to="/boards/review">매칭 후기</StyledNavLink>
+              <StyledNavLink to="/boards/boast">자랑</StyledNavLink>
+              <StyledNavLink to="/boards/announcement">공지사항</StyledNavLink>
+              <StyledNavLink to="/boards/inquiry">신고/문의</StyledNavLink>
             </NavLinks>
             {user ? (
               <UserActions>

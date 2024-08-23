@@ -198,3 +198,8 @@ export const SubmitButtonContainer = styled.div`
   justify-content: center;
   width: 100%;
 `;
+
+export const ContentContainer = styled.div`
+  margin-bottom: 20px;  // 게시글 목록과 페이지네이션 사이의 간격 조정
+  min-height: 300px;  // 최소 높이 설정으로 게시글이 적을 때도 레이아웃 유지
+`;

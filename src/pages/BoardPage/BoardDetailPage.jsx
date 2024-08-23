@@ -55,7 +55,7 @@ const BoardDetailPage = () => {
   if (!post) return <div>게시글을 찾을 수 없습니다.</div>;
 
   const renderExtraInfo = () => {
-    if (boardType === 'R' || boardType === 'B') {
+    if (boardType === 'review' || boardType === 'boast') {
       return (
         <>
           <span>조회수: {post.comment_view_cnt}</span>
@@ -67,7 +67,7 @@ const BoardDetailPage = () => {
           </span>
         </>
       );
-    } else if (boardType === 'I') {
+    } else if (boardType === 'inquiry') {
       return <span>상태: {post.inquiry_status}</span>;
     }
     return null;
