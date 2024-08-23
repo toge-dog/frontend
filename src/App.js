@@ -22,6 +22,7 @@ function App() {
 
       <Route path='/' element={<AppLayout />}>
         <Route index element={<HomePage />} />
+        
         <Route path="boards">
         <Route path="/boards/:boardType" element={<BoardPage />} />
         <Route path="/boards/:boardType/write" element={<BoardWritePage />} />
@@ -33,6 +34,7 @@ function App() {
         <Route path="members/find-pw/:memberId" element={<FindPasswordResetPage />} />
 
         <Route path="login" element={<LoginPage />}/>
+
         <Route path="sign-up">
           <Route index element={<SignUpTermsPage />} />
           <Route path="members" element={<SignUpInfoPage />} />

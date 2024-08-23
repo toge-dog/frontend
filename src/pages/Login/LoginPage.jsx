@@ -101,7 +101,7 @@ const LoginPage = () => {
         <LinkContainer>
           <StyledLink to="/members/find-id">아이디찾기</StyledLink>
           <StyledLink to="/members/find-pw">비밀번호찾기</StyledLink>
-          <StyledLink to="/sign-up/members">회원가입</StyledLink>
+          <StyledLink to="/sign-up">회원가입</StyledLink>
         </LinkContainer>
         <SocialLoginContainer>
           <SocialLoginButton onClick={() => handleSocialLogin('google')}>
