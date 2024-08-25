@@ -13,6 +13,7 @@ import SignUpInfoPage from './pages/SignUp/SignUpInfoPage'
 import NotFoundPage from './pages/ErrorPage/NotFoundPage';
 import BoardDetailPage from './pages/BoardPage/BoardDetailPage';
 import BoardWritePage from './pages/BoardPage/BoardWritePage';
+import MyPage from './pages/MyPage/MyPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -38,6 +39,8 @@ function App() {
           <Route index element={<SignUpTermsPage />} />
           <Route path="members" element={<SignUpInfoPage />} />
         </Route>
+
+        <Route path="mypage" element={<MyPage />} />
 
         <Route path="members/find-id" element={<FindIdPage />}/>
         <Route path="members/find-pw" element={<FindPasswordInitPage />}/>
