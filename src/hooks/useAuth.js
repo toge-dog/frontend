@@ -26,11 +26,13 @@ export const useAuth = () => {
     const loginMutation = useMutation({
         mutationFn: async (credentials) => {
             const response = await axios.post('http://localhost:8080/login', credentials);
-            const userData = await axios.get('http://localhost:8080/member', { headers: {"Authorization":response.headers['authorization']}});
+            const userDataResponse = await axios.get('http://localhost:8080/member', {
+                headers: { "Authorization": response.headers['authorization'] }
+            });
             return {
                 token: response.headers['authorization'],
-                user: userData.data.data,
-                email: userData.data.data.email
+                user: userDataResponse.data,
+                email: userDataResponse.data.email
             };
         },
         onSuccess: (data) => {
@@ -38,6 +40,11 @@ export const useAuth = () => {
             localStorage.setItem('token', token);
             localStorage.setItem('user', JSON.stringify(user)); // 사용자 정보를 로컬 스토리지에 저장
             localStorage.setItem('email', email);
+
+            // 펫 정보도 로컬 스토리지에 저장
+            if (user.pets) {
+                localStorage.setItem('pets', JSON.stringify(user.pets));
+            }
 
             setUser(user);
             setIsLoggedIn(true);
@@ -55,19 +62,23 @@ export const useAuth = () => {
     }, [loginMutation]);
 
     const logout = useCallback(async () => {
-        try {
-            await axios.post('http://localhost:8080/auth/logout');
-        } catch (error) {
-            console.error('로그아웃 요청 실패:', error);
-        } finally {
-            localStorage.removeItem('token');
-            localStorage.removeItem('user'); // 로그아웃 시 사용자 정보도 삭제
-            setUser(null);
-            setIsLoggedIn(false);
-            queryClient.setQueryData(['user'], null);
-            navigate('/login'); // 로그아웃 후 로그인 페이지로 리다이렉트
-        }
-    }, [navigate, queryClient]);
+    try {
+        await axios.post('http://localhost:8080/auth/logout');
+    } catch (error) {
+        console.error('로그아웃 요청 실패:', error);
+    } finally {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('email');
+        localStorage.removeItem('pets');
+        localStorage.clear();
+        setUser(null);
+        setIsLoggedIn(false);
+        queryClient.setQueryData(['user'], null);
+        navigate('/login'); // 로그아웃 후 로그인 페이지로 리다이렉트
+    }
+}, [navigate, queryClient]);
+
 
     const getToken = useCallback(() => {
         return localStorage.getItem('token');
