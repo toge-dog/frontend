@@ -12,20 +12,20 @@ const BoardDetailPage = () => {
   const [loading, setLoading] = useState(true);
   const [liked, setLiked] = useState(false);
   const [commentContent, setCommentContent] = useState('');
-  const { boardType, id } = useParams();
+  const { boardType, boardId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  console.log("Board ID:", id);
+  console.log("Board ID:", boardId);
   console.log("Board Type:", boardType);
   
   const fetchPost = async () => {
-    if (!id) {
+    if (!boardId) {
       throw new Error('Invalid post ID');
     }
     try {
-      console.log(`Fetching post with ID: ${id}`);
-      const response = await axios.get(`http://localhost:8080/boards/${id}`);
+      console.log(`Fetching post with ID: ${boardId}`);
+      const response = await axios.get(`http://localhost:8080/boards/${boardId}`);
       console.log("API Response:", response.data);
       return response.data.data;
     } catch (error) {
@@ -35,23 +35,23 @@ const BoardDetailPage = () => {
   };
 
   const { data: post, isLoading, isError, error } = useQuery({
-    queryKey: ['post', id],
+    queryKey: ['post', boardId],
     queryFn: fetchPost,
-    enabled: !!id,
+    enabled: !!boardId,
   });
 
    // 좋아요 처리
    const likeMutation = useMutation({
-    mutationFn: () => axios.post(`http://localhost:8080/boards/${id}/like`),
+    mutationFn: () => axios.post(`http://localhost:8080/boards/${boardId}/like`),
     onSuccess: () => {
-      queryClient.invalidateQueries(['post', id]);
+      queryClient.invalidateQueries(['post', boardId]);
     },
   });
 
   const commentMutation = useMutation({
-    mutationFn: (newComment) => axios.post(`http://localhost:8080/boards/${id}/comments`, newComment),
+    mutationFn: (newComment) => axios.post(`http://localhost:8080/boards/${boardId}/comments`, newComment),
     onSuccess: () => {
-      queryClient.invalidateQueries(['post', id]);
+      queryClient.invalidateQueries(['post', boardId]);
       setCommentContent('');
     },
   });

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
-import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { Container, Title, Table, Th, Td, WriteButton, GridContainer, GridItem, ImageContainer, AuthorName, Pagination, PageButton, ContentContainer } from './BoardStyles';
 
@@ -12,7 +11,7 @@ const BoardPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
-  const { isLoggedIn, getToken } = useAuth();
+  const { isLoggedIn, user, getToken } = useAuth();
   const { boardType } = useParams();
   const location = useLocation();
 
@@ -32,26 +31,40 @@ const BoardPage = () => {
     }
   }, [boardType, location.search]);
 
-  
+  useEffect(() => {
+    if (isLoggedIn) {
+      checkAdminStatus();
+    }
+  }, [isLoggedIn]);
 
   const fetchPosts = async (page) => {
     setLoading(true);
+    console.log('게시글을 불러옵니다...');
+  
     try {
       const response = await axios.get(`http://localhost:8080/boards`, {
         params: {
-          type: boardType,
+          'board-type': boardType,
           page: page,
           size: postsPerPage
         }
       });
-      // 서버 응답 구조에 따라 적절히 데이터를 변환
+  
+      console.log('서버 응답:', response);
+  
       const formattedPosts = response.data.data.map(post => ({
         ...post,
-        author: post.author || { nickname: '익명', email: '알 수 없음' },
-        viewCount: post.viewCount || 0,
-        likesCount: post.likesCount || 0,
+        author: {
+          ...post.author,
+          nickname: post.author?.nickName || '익명'
+        },
+        viewCount: post.viewCount ?? 0,
+        likesCount: post.likesCount ?? 0,
         boardStatus: post.boardStatus || '기본 상태'
       }));
+  
+      console.log('포맷된 게시글:', formattedPosts);
+  
       setPosts(formattedPosts);
       setTotalPages(response.data.pageInfo.totalPages || 1);
       setCurrentPage(page);
@@ -60,36 +73,17 @@ const BoardPage = () => {
       setPosts([]);
     } finally {
       setLoading(false);
+      console.log('게시글 불러오기 완료');
     }
   };
-
-const fetchUserInfo = async () => {
-  try {
-    const response = await axios.get('http://localhost:8080/member', {
-      headers: {
-        Authorization: `Bearer ${getToken()}`
-      }
-    });
-    return response.data;
-  } catch (error) {
-    console.error('사용자 정보를 가져오는데 실패했습니다:', error);
-    return null;
-  }
-};
-
-const { data: userInfo, isPending: userInfoLoading, isError: userInfoError } = useQuery({
-  queryKey: ['userInfo'],
-  queryFn: fetchUserInfo,
-  enabled: isLoggedIn,
-  staleTime: 5 * 60 * 1000, // 5분
-  gcTime: 60 * 60 * 1000, // 1시간 (v5에서 cacheTime이 gcTime으로 변경됨)
-  retry: 1,
-});
-
+  
   const checkAdminStatus = async () => {
-    // 여기에 관리자 권한을 확인하는 로직 추후에 추가
     try {
-      const response = await axios.get('http://localhost:8080/user/role');
+      const response = await axios.get('http://localhost:8080/user/role', {
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        }
+      });
       setIsAdmin(response.data.role === 'ADMIN');
     } catch (error) {
       console.error('사용자 권한 확인 실패:', error);
@@ -108,7 +102,6 @@ const { data: userInfo, isPending: userInfoLoading, isError: userInfoError } = u
   };
 
   const handleWriteClick = () => {
-    console.log(isLoggedIn);
     if (isLoggedIn) {
       navigate(`/boards/${boardType}/write`);
     } else {
@@ -117,26 +110,14 @@ const { data: userInfo, isPending: userInfoLoading, isError: userInfoError } = u
     }
   };
 
-  const handleSubmitButtonClick = async () => {
-    try {
-      // 게시글 저장 로직이 필요하다면 여기에 추가
-      // 예: await axios.post('http://localhost:8080/boards', postData);
-
-      // 작성 완료 후 게시글 목록 다시 불러오기
-      fetchPosts();
-    } catch (error) {
-      console.error('게시글 저장 실패:', error);
-    }
-  };
-
   const renderBoastBoard = () => (
     <GridContainer>
       {posts.map((post) => (
-        <GridItem key={post.board_id} onClick={() => navigate(`/boards/${boardType}/${post.board_id}`)}>
+        <GridItem key={post.boardId} onClick={() => navigate(`/boards/${boardType}/${post.boardId}`)}>
           <ImageContainer>
-            <img src={post.content_img} alt={post.title} />
+            <img src={post.contentImg} alt={post.title} />
           </ImageContainer>
-          <AuthorName>{post.member_id}</AuthorName>
+          <AuthorName>{post.author?.nickname}</AuthorName>
         </GridItem>
       ))}
     </GridContainer>
@@ -156,12 +137,12 @@ const { data: userInfo, isPending: userInfoLoading, isError: userInfoError } = u
       </thead>
       <tbody>
         {posts.map((post, index) => (
-          <tr key={index} onClick={() => navigate(`/boards/${boardType}/${index + 1}`)}>
+          <tr key={post.boardId} onClick={() => navigate(`/boards/${boardType}/${post.boardId}`)}>
             <Td>{index + 1}</Td>
             <Td>{post.title}</Td>
-            <Td>{post.author?.nickname || post.author?.email || '알 수 없음'}</Td>
-            <Td>{post.viewCount}</Td>
-            <Td>{post.likesCount}</Td>
+            <Td>{post.author?.nickname || '알 수 없음'}</Td>
+            <Td>{post.viewCount ?? 0}</Td>
+            <Td>{post.likesCount ?? 0}</Td>
             <Td>{post.boardStatus}</Td>
           </tr>
         ))}
@@ -205,11 +186,13 @@ const { data: userInfo, isPending: userInfoLoading, isError: userInfoError } = u
       <ContentContainer>
         {loading ? (
           <p>게시글을 불러오는 중...</p>
-        ) : (
+        ) : posts.length > 0 ? (
           boardType === 'boast' ? renderBoastBoard() : renderOtherBoard()
+        ) : (
+          <p>게시글이 없습니다.</p>
         )}
       </ContentContainer>
-      {renderPagination()}
+      {posts.length > 0 && renderPagination()}
       {(boardType !== 'announcement' || (boardType === 'announcement' && isAdmin)) && (
         <WriteButton onClick={handleWriteClick}>글쓰기</WriteButton>
       )}

@@ -29,23 +29,6 @@ const HomePage = () => {
   return (
     <div>
       <BannerImage src={banner} alt="Home Banner" />
-
-      {isLoggedIn && user ? (
-        <UserInfoContainer>
-          <h2>환영합니다, {user.nickName}님!</h2>
-          {pet && (
-            <PetInfo>
-              <h3>반려견 정보: {pet.petName}</h3>
-              {pet.petProfileImage && (
-                <PetImage src={pet.petProfileImage} alt={pet.petName} />
-              )}
-            </PetInfo>
-          )}
-          <LogoutButton onClick={logout}>로그아웃</LogoutButton>
-        </UserInfoContainer>
-      ) : (
-        null
-      )}
       <KakaoMap />
 
     </div>
