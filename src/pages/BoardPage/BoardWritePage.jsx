@@ -23,12 +23,14 @@ const BoardWritePage = () => {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
   const { boardType } = useParams();
-  const { user, isLoggedIn } = useAuth();
+  const { isLoggedIn, getToken } = useAuth();
 
   useEffect(() => {
-    console.log('Login status:', isLoggedIn);
-    console.log('User object:', user);
-  }, [isLoggedIn, user]);
+    if (!isLoggedIn) {
+      alert('로그인이 필요한 서비스입니다.');
+      navigate('/login');
+    }
+  }, [isLoggedIn, navigate]);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -51,7 +53,8 @@ const BoardWritePage = () => {
     try {
       const response = await axios.post('http://localhost:8080/upload', formData, {
         headers: {
-          'Content-Type': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data',
+          'Authorization': `Bearer ${getToken()}`
         }
       });
       return response.data; // Assuming the response contains the image URL
@@ -62,54 +65,48 @@ const BoardWritePage = () => {
     }
   };
 
-  let adjustedBoardType;
-  switch (boardType) {
-    case 'R':
-      adjustedBoardType = 'REVIEW';
-      break;
-    case 'B':
-      adjustedBoardType = 'BOAST';
-      break;
-    case 'I':
-      adjustedBoardType = 'INQUIRY';
-    default:
-      adjustedBoardType = 'ANNOUNCEMENT';
-  }
-
   const handleSubmit = async (e) => {
     e.preventDefault();
   
-    // Step 1: Upload the image to S3 and get the image URL
     const contentImg = await handleImageUpload();
   
-    // Step 2: Prepare the data object
     const data = {
       title,
       content,
-      contentImg,  // Include the image URL if it was uploaded
-      boardType: adjustedBoardType,
-      memberId: user?.id, // Assuming the user ID is part of the user object
+      contentImg,
+      boardType: boardType.toUpperCase()
     };
   
     console.log('Payload data:', JSON.stringify(data));
   
     try {
-      const response = await axios.post('http://localhost:8080/boards', data, {
+      const response = await axios.post(`http://localhost:8080/boards/${boardType}`, data, {
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getToken()}`
         }
       });
       console.log('Response:', response);
-      navigate(`/boards/${boardType}`);
+
+      const boardId = response.headers.location.split('/').pop();
+      
+      navigate(`/boards/${boardType}?newPost=true&postId=${boardId}`);
     } catch (error) {
-      console.error('게시글 작성에 실패했습니다:', error.response ? error.response.data : error.message);
-      console.log('전체 에러 객체:', error);
+      console.error('게시글 작성에 실패했습니다:', error);
       if (error.response) {
-        console.log('서버 응답 데이터:', error.response.data);  // 서버 응답 데이터 출력
+        console.log('서버 응답 데이터:', error.response.data);
+        console.log('서버 응답 상태:', error.response.status);
+        console.log('서버 응답 헤더:', error.response.headers);
+        alert(`게시글 작성에 실패했습니다. 오류: ${error.response.data.error || '알 수 없는 오류'}`);
+      } else if (error.request) {
+        console.log('요청이 전송되었지만 응답을 받지 못했습니다:', error.request);
+        alert('서버에서 응답이 없습니다. 네트워크 연결을 확인해주세요.');
+      } else {
+        console.log('오류 발생:', error.message);
+        alert('게시글 작성 중 오류가 발생했습니다.');
       }
     }
   };
-  
 
   const handleImageUploadClick = () => {
     fileInputRef.current.click();
@@ -117,7 +114,7 @@ const BoardWritePage = () => {
 
   return (
     <Container>
-      <Title>{boardType === 'R' ? '매칭 후기 작성' : boardType === 'B' ? '자랑하기' : '게시글 작성'}</Title>
+      <Title>{getBoardTitle(boardType)}</Title>
       <Form onSubmit={handleSubmit}>
         <Input
           type="text"
@@ -155,6 +152,16 @@ const BoardWritePage = () => {
       </Form>
     </Container>
   );
+};
+
+const getBoardTitle = (boardType) => {
+  switch(boardType) {
+    case 'review': return '매칭 후기 작성';
+    case 'boast': return '자랑하기';
+    case 'announcement': return '공지사항 작성';
+    case 'inquiry': return '신고/문의 작성';
+    default: return '게시글 작성';
+  }
 };
 
 export default BoardWritePage;

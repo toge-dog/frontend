@@ -13,6 +13,7 @@ import SignUpInfoPage from './pages/SignUp/SignUpInfoPage'
 import NotFoundPage from './pages/ErrorPage/NotFoundPage';
 import BoardDetailPage from './pages/BoardPage/BoardDetailPage';
 import BoardWritePage from './pages/BoardPage/BoardWritePage';
+import MyPage from './pages/MyPage/MyPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -24,21 +25,22 @@ function App() {
         <Route index element={<HomePage />} />
         
         <Route path="boards">
-        <Route path="/boards/:boardType" element={<BoardPage />} />
-        <Route path="/boards/:boardType/write" element={<BoardWritePage />} />
-        <Route path="/boards/:boardType/:id" element={<BoardDetailPage />} />
+          <Route path=":boardType" element={<BoardPage />} />
+          <Route path=":boardType/write" element={<BoardWritePage />} />
+          <Route path=":boardType/:id" element={<BoardDetailPage />} />
         </Route>
-        <Route path="login" element={<LoginPage />} />
-        <Route path="members/find-id" element={<FindIdPage />} />
-        <Route path="members/find-pw" element={<FindPasswordInitPage />} />
-        <Route path="members/find-pw/:memberId" element={<FindPasswordResetPage />} />
 
-        <Route path="login" element={<LoginPage />}/>
+        <Route path="login" element={<LoginPage />} />
+          <Route path="members/find-id" element={<FindIdPage />} />
+          <Route path="members/find-pw" element={<FindPasswordInitPage />} />
+          <Route path="members/find-pw/:memberId" element={<FindPasswordResetPage />} />
 
         <Route path="sign-up">
           <Route index element={<SignUpTermsPage />} />
           <Route path="members" element={<SignUpInfoPage />} />
         </Route>
+
+        <Route path="mypage" element={<MyPage />} />
 
         <Route path="members/find-id" element={<FindIdPage />}/>
         <Route path="members/find-pw" element={<FindPasswordInitPage />}/>
