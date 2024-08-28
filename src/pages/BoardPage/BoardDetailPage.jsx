@@ -9,52 +9,87 @@ import { ClipLoader } from 'react-spinners';
 import { Container, Title, Meta, Content, BackButton, Image, LikeButton, CommentSection, CommentInput, CommentSubmitButton } from './BoardStyles';
 
 const BoardDetailPage = () => {
-  const [loading, setLoading] = useState(true);
-  const [liked, setLiked] = useState(false);
   const [commentContent, setCommentContent] = useState('');
   const { boardType, boardId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
 
-  console.log("Board ID:", boardId);
-  console.log("Board Type:", boardType);
-  
   const fetchPost = async () => {
     if (!boardId) {
-      throw new Error('Invalid post ID');
+      throw new Error('잘못된 게시글 ID 입니다.');
     }
     try {
-      console.log(`Fetching post with ID: ${boardId}`);
       const response = await axios.get(`http://localhost:8080/boards/${boardId}`);
-      console.log("API Response:", response.data);
       return response.data.data;
     } catch (error) {
-      console.error("Error fetching post:", error.response || error);
       throw error;
     }
   };
 
-  const { data: post, isLoading, isError, error } = useQuery({
+  const {
+    data: post,
+    isLoading,
+    isError,
+    error
+  } = useQuery({
     queryKey: ['post', boardId],
     queryFn: fetchPost,
     enabled: !!boardId,
+    retry: 1
   });
 
-   // 좋아요 처리
-   const likeMutation = useMutation({
-    mutationFn: () => axios.post(`http://localhost:8080/boards/${boardId}/like`),
+  const likeMutation = useMutation({
+    mutationFn: () => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('token을 찾을 수 없습니다.');
+      }
+      return axios.post(`http://localhost:8080/likes`, {
+        memberId: post.memberId,
+        boardId: boardId,
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(['post', boardId]);
     },
+    onError: (error) => {
+      if (error.response?.status === 401) {
+        alert('로그인 후 사용하세요.');
+      } else {
+        alert('좋아요 처리 중 오류가 발생했습니다.');
+      }
+    }
   });
+  
 
   const commentMutation = useMutation({
-    mutationFn: (newComment) => axios.post(`http://localhost:8080/boards/${boardId}/comments`, newComment),
+    mutationFn: (newComment) => {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('token을 찾을 수 없습니다.');
+      }
+      return axios.post(`http://localhost:8080/boards/${boardId}/comments`, {
+        content: newComment.content
+      }, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries(['post', boardId]);
       setCommentContent('');
     },
+    onError: (error) => {
+      alert('댓글 작성 중 오류가 발생했습니다.');
+    },
   });
+  
+  
 
   const handleLike = () => {
     likeMutation.mutate();
@@ -62,25 +97,35 @@ const BoardDetailPage = () => {
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
-    commentMutation.mutate({ content: commentContent });
+    const newComment = { content: commentContent }; // 서버에서 요구하는 필드가 무엇인지 확인
+    commentMutation.mutate(newComment);
   };
+  
 
-
-  if (loading) return (
+  if (isLoading) return (
     <Container>
-      <ClipLoader color="#e57373" loading={loading} size={50} />
+      <ClipLoader color="#e57373" loading={isLoading} size={50} />
     </Container>
   );
 
-  if (isError) return <div>게시글을 불러오는데 오류가 발생했습니다.</div>;
+  if (isError) {
+    console.error("Error loading post:", error.message);
+    return <div>게시글을 불러오는데 오류가 발생했습니다: {error.message}</div>;
+  }
 
-  if (!post) return <div>게시글을 찾을 수 없습니다.</div>;
+  if (!post) {
+    console.warn("Post not found");
+    return <div>게시글을 찾을 수 없습니다.</div>;
+  }
 
+  console.log("포스트",post);
   return (
     <Container>
       <Title>{post.title}</Title>
+      <Content>{post.content}</Content>
+      {post.contentImg && <Image src={post.contentImg} alt="게시글 이미지" />}
       <Meta>
-        <span>작성자: {post.memberId || '알 수 없음'}</span>
+        <span>작성자: {post.author}</span>
         <span>작성일: {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : '알 수 없음'}</span>
         <span>조회수: {post.viewCount || 0}</span>
         <span>
@@ -90,8 +135,7 @@ const BoardDetailPage = () => {
           </LikeButton>
         </span>
       </Meta>
-      <Content>{post.content}</Content>
-      {post.contentImg && <Image src={post.contentImg} alt="게시글 이미지" />}
+      
       
       <CommentSection>
         <h3>댓글</h3>
@@ -99,7 +143,7 @@ const BoardDetailPage = () => {
           post.comments.map((comment) => (
             <div key={comment.commentId}>
               <p>{comment.content}</p>
-              <small>{comment.memberId || '알 수 없음'} - {comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : '알 수 없음'}</small>
+              <small>{post.author || '알 수 없음'} : {comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : '알 수 없음'}</small>
             </div>
           ))
         ) : (

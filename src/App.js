@@ -14,6 +14,7 @@ import NotFoundPage from './pages/ErrorPage/NotFoundPage';
 import BoardDetailPage from './pages/BoardPage/BoardDetailPage';
 import BoardWritePage from './pages/BoardPage/BoardWritePage';
 import MyPage from './pages/MyPage/MyPage';
+import FriendsPage from './pages/FriendsPage/FriendsManagementPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
@@ -27,7 +28,7 @@ function App() {
         <Route path="boards">
           <Route path=":boardType" element={<BoardPage />} />
           <Route path=":boardType/write" element={<BoardWritePage />} />
-          <Route path=":boardType/:id" element={<BoardDetailPage />} />
+          <Route path=":boardType/:boardId" element={<BoardDetailPage />} />
         </Route>
 
         <Route path="login" element={<LoginPage />} />
@@ -41,6 +42,7 @@ function App() {
         </Route>
 
         <Route path="mypage" element={<MyPage />} />
+        <Route path="friends" element={<FriendsPage />} />
 
         <Route path="members/find-id" element={<FindIdPage />}/>
         <Route path="members/find-pw" element={<FindPasswordInitPage />}/>

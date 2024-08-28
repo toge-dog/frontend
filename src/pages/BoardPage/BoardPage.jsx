@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams, useLocation } from 'react-router-dom';
+import { useQuery } from '@tanstack/react-query';
 import { useAuth } from '../../hooks/useAuth';
 import axios from 'axios';
 import { Container, Title, Table, Th, Td, WriteButton, GridContainer, GridItem, ImageContainer, AuthorName, Pagination, PageButton, ContentContainer } from './BoardStyles';
@@ -9,9 +10,8 @@ const BoardPage = () => {
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [isAdmin, setIsAdmin] = useState(false);
   const navigate = useNavigate();
-  const { isLoggedIn, user, getToken } = useAuth();
+  const { isLoggedIn, getToken } = useAuth();
   const { boardType } = useParams();
   const location = useLocation();
 
@@ -31,63 +31,36 @@ const BoardPage = () => {
     }
   }, [boardType, location.search]);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      checkAdminStatus();
-    }
-  }, [isLoggedIn]);
-
   const fetchPosts = async (page) => {
     setLoading(true);
-    console.log('게시글을 불러옵니다...');
-  
     try {
-      const response = await axios.get(`http://localhost:8080/boards`, {
+      const response = await axios.get('http://localhost:8080/boards', {
         params: {
-          'board-type': boardType,
+          type: boardType,
           page: page,
-          size: postsPerPage
-        }
-      });
-  
-      console.log('서버 응답:', response);
-  
-      const formattedPosts = response.data.data.map(post => ({
-        ...post,
-        author: {
-          ...post.author,
-          nickname: post.author?.nickName || '익명'
+          size: postsPerPage,
         },
+      });
+
+      const formattedPosts = response.data.data.map((post) => ({
+        ...post,
+        author: post.author || '익명',
         viewCount: post.viewCount ?? 0,
         likesCount: post.likesCount ?? 0,
-        boardStatus: post.boardStatus || '기본 상태'
+        boardStatus: post.boardStatus || '기본 상태',
+        content: post.content || '',
+        title: post.title || '(제목 없음)',
+        boardType: post.boardType || '알 수 없음',
       }));
-  
-      console.log('포맷된 게시글:', formattedPosts);
-  
+
       setPosts(formattedPosts);
-      setTotalPages(response.data.pageInfo.totalPages || 1);
+      setTotalPages(response.data.pageInfo?.totalPages || 1);
       setCurrentPage(page);
     } catch (error) {
       console.error('게시글을 불러오는데 실패했습니다:', error);
       setPosts([]);
     } finally {
       setLoading(false);
-      console.log('게시글 불러오기 완료');
-    }
-  };
-  
-  const checkAdminStatus = async () => {
-    try {
-      const response = await axios.get('http://localhost:8080/user/role', {
-        headers: {
-          Authorization: `Bearer ${getToken()}`
-        }
-      });
-      setIsAdmin(response.data.role === 'ADMIN');
-    } catch (error) {
-      console.error('사용자 권한 확인 실패:', error);
-      setIsAdmin(false);
     }
   };
 
@@ -101,6 +74,38 @@ const BoardPage = () => {
     }
   };
 
+  const fetchUserInfo = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/member', {
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        // 서버가 응답을 보냈지만 상태 코드가 2xx 범위가 아닌 경우
+        console.error('서버 응답 오류:', error.response.status);
+      } else if (error.request) {
+        // 요청이 만들어졌지만 응답을 받지 못한 경우
+        console.error('서버로부터 응답이 없습니다:', error.request);
+      } else {
+        // 요청 설정 중에 오류가 발생한 경우
+        console.error('요청 설정 중 오류:', error.message);
+      }
+      return null;
+    }
+  };
+
+  const { data: userInfo, isPending: userInfoLoading, isError: userInfoError } = useQuery({
+    queryKey: ['userInfo'],
+    queryFn: fetchUserInfo,
+    enabled: isLoggedIn,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+    retry: 1,
+  });
+
   const handleWriteClick = () => {
     if (isLoggedIn) {
       navigate(`/boards/${boardType}/write`);
@@ -110,14 +115,16 @@ const BoardPage = () => {
     }
   };
 
+  console.log(posts);
+
   const renderBoastBoard = () => (
     <GridContainer>
       {posts.map((post) => (
         <GridItem key={post.boardId} onClick={() => navigate(`/boards/${boardType}/${post.boardId}`)}>
           <ImageContainer>
-            <img src={post.contentImg} alt={post.title} />
+            <img src={post.contentImg || '/placeholder-image.jpg'} alt={post.title || '이미지'} />
           </ImageContainer>
-          <AuthorName>{post.author?.nickname}</AuthorName>
+          <AuthorName>{post.author || '익명'}</AuthorName>
         </GridItem>
       ))}
     </GridContainer>
@@ -139,11 +146,11 @@ const BoardPage = () => {
         {posts.map((post, index) => (
           <tr key={post.boardId} onClick={() => navigate(`/boards/${boardType}/${post.boardId}`)}>
             <Td>{index + 1}</Td>
-            <Td>{post.title}</Td>
-            <Td>{post.author?.nickname || '알 수 없음'}</Td>
+            <Td>{post.title || '(제목 없음)'}</Td>
+            <Td>{post.author || '익명'}</Td>
             <Td>{post.viewCount ?? 0}</Td>
             <Td>{post.likesCount ?? 0}</Td>
-            <Td>{post.boardStatus}</Td>
+            <Td>{post.boardStatus || '기본 상태'}</Td>
           </tr>
         ))}
       </tbody>
@@ -185,7 +192,7 @@ const BoardPage = () => {
       <Title>{getBoardTitle()}</Title>
       <ContentContainer>
         {loading ? (
-          <p>게시글을 불러오는 중...</p>
+          <p>게시글을 불러오는 중입니다.</p>
         ) : posts.length > 0 ? (
           boardType === 'boast' ? renderBoastBoard() : renderOtherBoard()
         ) : (
@@ -193,7 +200,7 @@ const BoardPage = () => {
         )}
       </ContentContainer>
       {posts.length > 0 && renderPagination()}
-      {(boardType !== 'announcement' || (boardType === 'announcement' && isAdmin)) && (
+      {(boardType !== 'announcement' || (boardType === 'announcement')) && (
         <WriteButton onClick={handleWriteClick}>글쓰기</WriteButton>
       )}
     </Container>
