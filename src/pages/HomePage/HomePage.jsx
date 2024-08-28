@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
-import banner from '../../assets/banner.jpg';
+// import banner from '../../assets/banner.jpg';
+import banner from '../../assets/main_banner.jpg';
 import KakaoMap from '../../components/Kakao';
 import { useAuth } from '../../hooks/useAuth'; // useAuth 훅을 import
-
+import MainBoardPage from './components/MainBoardPage';
 const safelyParseJSON = (jsonString) => {
   try {
     return jsonString ? JSON.parse(jsonString) : null;
@@ -27,19 +28,26 @@ const HomePage = () => {
   }, []);
 
   return (
-    <div>
-      <BannerImage src={banner} alt="Home Banner" />
-      <KakaoMap />
-
-    </div>
-  );
+    <Main>
+        <BannerImage src={banner} alt="Home Banner" />
+        <KakaoMap style={{ zIndex: 1}} />
+        <MainBoardPage style={{ zIndex: 1}}/>
+        <MainBoardPage style={{ zIndex: 1}}/>
+    </Main>
+  ); 
 };
+
+const Main = styled.div`
+ background-color: #9FC362;
+`;
+
 
 const BannerImage = styled.img`
   width: 100%;
-  max-height: 600px;
+  max-height: 1792px;
   object-fit: cover;
-  margin-top: 100px;
+  margin-top: 0px;
+  z-index: 1;
 `;
 
 const UserInfoContainer = styled.div`

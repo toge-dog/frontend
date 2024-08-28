@@ -119,14 +119,19 @@ const AppLayout = () => {
 };
 
 const PageWrapper = styled.div`
+  position: relative;
   display: flex;
   flex-direction: column;
   min-height: 100vh;
+  z-index: 9999;
 `;
 
 const StyledNavbar = styled.nav`
   background-color: white;
-  padding: 10px 0;
+  width: 100%;
+  position: fixed;
+  z-index: 9999;
+  padding: 5px 0;
 `;
 
 const NavbarContainer = styled(Container)`

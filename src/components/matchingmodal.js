@@ -100,10 +100,10 @@ function ListItem({ petImg, name, createdAt, status, mode, matchingDone, setMatc
               disabled={matchingDone} // 매칭 완료 후 버튼 비활성화
               style={{
                 border: '2px solid brown',
-                backgroundColor: isMatched ? 'gray' : (matchingDone ? 'gray' : 'blue'), // 매칭 성사 시 초록색, 매칭 완료 후 회색
+                backgroundColor: isMatched ? 'gray' : (matchingDone ? 'gray' : 'red'), // 매칭 성사 시 초록색, 매칭 완료 후 회색
               }}
             >
-              {isMatched ? "매칭 취소" : (status === "응답 대기" ? (isClicked ? "요청 취소" : "매칭 거절") : status)}
+              {isMatched ? "매칭 취소" : (status === "응답 대기" ? (isClicked ? "매칭 거절" : "요청 취소") : status)}
             </Button>
           )}
         </Col>
