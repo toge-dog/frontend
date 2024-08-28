@@ -8,13 +8,13 @@ const Modal = ({ show, onClose, title, children }) => {
 
   return (
     <div className="modal-overlay">
-      <div className="modal-content">
+      <div className="modal-text">
         <h2>{title}</h2>
         <div className="modal-body">
           {children}
         </div>
         <button className="modal-close-button" onClick={onClose}>
-          닫기
+    
         </button>
       </div>
     </div>
