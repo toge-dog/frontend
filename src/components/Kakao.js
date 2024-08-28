@@ -1,5 +1,5 @@
 /*global kakao*/
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState, useCallback, useRef } from 'react';
 import axios from 'axios';
 import './Kakao.css';
 import Modal from './modal';

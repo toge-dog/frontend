@@ -1,0 +1,23 @@
+.slider-wrapper {
+    overflow: hidden;
+  }
+  
+  .slider-inner {
+    display: flex;
+    transition: transform 0.5s ease;
+  }
+  
+  .prev-btn, .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .prev-btn {
+    left: 0;
+  }
+  
+  .next-btn {
+    right: 0;
+  }
+  

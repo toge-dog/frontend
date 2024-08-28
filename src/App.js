@@ -19,12 +19,10 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 function App() {
   return (
-
+  	
     <Routes>
-
       <Route path='/' element={<AppLayout />}>
         <Route index element={<HomePage />} />
-        
         <Route path="boards">
           <Route path=":boardType" element={<BoardPage />} />
           <Route path=":boardType/write" element={<BoardWritePage />} />
@@ -49,8 +47,8 @@ function App() {
         <Route path="members/find-pw/:memberId" element={<FindPasswordResetPage />}/>
 
         <Route path="*" element={<NotFoundPage />}/>
-      </Route>
       <Route path="map" element={<KakaoMap/>} /> 
+      </Route>
     </Routes>
   );
 }
