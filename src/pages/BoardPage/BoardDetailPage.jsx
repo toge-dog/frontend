@@ -6,14 +6,14 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 import { ClipLoader } from 'react-spinners';
-import { Container, Title, Meta, Content, BackButton, Image, LikeButton, CommentSection, CommentInput, CommentSubmitButton } from './BoardStyles';
+import { Container, Title, Meta, Content, BackButton, Image, LikeButton, CommentSection, CommentInput, CommentSubmitButton, CommentItem, CommentAuthor, CommentDate, NoComments } from './BoardStyles';
 
 const BoardDetailPage = () => {
   const [commentContent, setCommentContent] = useState('');
   const { boardType, boardId } = useParams();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-
+  
   const fetchPost = async () => {
     if (!boardId) {
       throw new Error('잘못된 게시글 ID 입니다.');
@@ -64,7 +64,6 @@ const BoardDetailPage = () => {
       }
     }
   });
-  
 
   const commentMutation = useMutation({
     mutationFn: (newComment) => {
@@ -73,7 +72,7 @@ const BoardDetailPage = () => {
         throw new Error('token을 찾을 수 없습니다.');
       }
       return axios.post(`http://localhost:8080/boards/${boardId}/comments`, {
-        content: newComment.content
+        comment: newComment.content
       }, {
         headers: {
           Authorization: `Bearer ${token}`
@@ -88,8 +87,6 @@ const BoardDetailPage = () => {
       alert('댓글 작성 중 오류가 발생했습니다.');
     },
   });
-  
-  
 
   const handleLike = () => {
     likeMutation.mutate();
@@ -97,14 +94,13 @@ const BoardDetailPage = () => {
 
   const handleCommentSubmit = (e) => {
     e.preventDefault();
-    const newComment = { content: commentContent }; // 서버에서 요구하는 필드가 무엇인지 확인
+    const newComment = { content: commentContent };
     commentMutation.mutate(newComment);
   };
-  
 
   if (isLoading) return (
     <Container>
-      <ClipLoader color="#e57373" loading={isLoading} size={50} />
+      <ClipLoader color="#007bff" loading={isLoading} size={50} />
     </Container>
   );
 
@@ -118,36 +114,37 @@ const BoardDetailPage = () => {
     return <div>게시글을 찾을 수 없습니다.</div>;
   }
 
-  console.log("포스트",post);
   return (
     <Container>
       <Title>{post.title}</Title>
-      <Content>{post.content}</Content>
-      {post.contentImg && <Image src={post.contentImg} alt="게시글 이미지" />}
       <Meta>
         <span>작성자: {post.author}</span>
         <span>작성일: {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : '알 수 없음'}</span>
         <span>조회수: {post.viewCount || 0}</span>
         <span>
-          좋아요: {post.likeCount || 0}
+          좋아요: {post.likesCount || 0}
           <LikeButton onClick={handleLike}>
             <FontAwesomeIcon icon={post.isLiked ? solidHeart : regularHeart} color={post.isLiked ? 'red' : 'gray'} />
           </LikeButton>
         </span>
       </Meta>
-      
+      <Content>
+        <p>{post.content}</p>
+        {post.contentImg && <Image src={post.contentImg} alt="게시글 이미지" />}
+      </Content>
       
       <CommentSection>
         <h3>댓글</h3>
         {post.comments && post.comments.length > 0 ? (
           post.comments.map((comment) => (
-            <div key={comment.commentId}>
-              <p>{comment.content}</p>
-              <small>{post.author || '알 수 없음'} : {comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : '알 수 없음'}</small>
-            </div>
+            <CommentItem key={comment.commentId}>
+              <p>{comment.comment}</p>
+              <CommentAuthor>{comment.name || '알 수 없음'}</CommentAuthor>
+              <CommentDate>{comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : '작성일 정보 없음'}</CommentDate>
+            </CommentItem>
           ))
         ) : (
-          <p>아직 댓글이 없습니다.</p>
+          <NoComments>아직 댓글이 없습니다.</NoComments>
         )}
         <form onSubmit={handleCommentSubmit}>
           <CommentInput 
