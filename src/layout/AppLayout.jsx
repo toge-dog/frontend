@@ -49,9 +49,9 @@ const AppLayout = () => {
   };
 
   // 펫 프로필 이미지를 가져오기
-  const petImage = user?.data?.pets?.[0]?.petProfileImage;
+  const petImage = user?.pets?.[0]?.petProfileImage;
   // user 닉네임 가져오기
-  const nickName = user?.data?.nickName;
+  const nickName = user?.nickName;
 
   const handleDropdownToggle = () => {
     setDropdownOpen(prev => !prev); // 드롭다운 열림/닫힘 토글
@@ -101,7 +101,7 @@ const AppLayout = () => {
                   <DropdownItem to="/mypage" onClick={() => setDropdownOpen(false)}>마이페이지</DropdownItem>
                   <DropdownItem to="/friends" onClick={() => setDropdownOpen(false)}>친구</DropdownItem>
                   <DropdownItem to="/blacklist" onClick={() => setDropdownOpen(false)}>블랙리스트</DropdownItem>
-                  <DropdownItem to="/my-posts" onClick={() => setDropdownOpen(false)}>내 게시글</DropdownItem>
+                  <DropdownItem to="/my-posts" onClick={() => setDropdownOpen(false)}>내 게시글</DropdownItem> 
                 </DropdownMenu>
               )}
             </UserActions>
