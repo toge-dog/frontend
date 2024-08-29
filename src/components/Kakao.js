@@ -284,12 +284,12 @@ const KakaoMap = () => {
   return (
     <div className="map-container">
       <div id="map"></div>
-   
+    <Matchingmodal show={showModal} onClose={rerodeMap} title="매칭 정보" />
       {/* <ExampleModal 
     
         show={showExampleModal}
         onClose={closeExampleModal}/> */}
-      <Matchingmodal show={showModal} onClose={rerodeMap} title="매칭 정보" />
+      
       <MarkerModal
         show={showMarkerModal}
         onClose={closeMarkerModal}
@@ -330,6 +330,7 @@ const KakaoMap = () => {
       )}
 
     </div>
+  
   );
 };
 

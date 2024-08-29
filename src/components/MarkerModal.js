@@ -64,7 +64,7 @@ const MarkerModal = ({ show, onClose, markerData }) => {
   const isButtonDisabled = loading || matchStatus === 'MatchRegistered';
 
   return (
-    <Modal show={show} onHide={onClose} className="custom-modal">
+    <Modal show={show} onHide={onClose} className="custom-modal" dialogClassName="modal-dialog-centered">
       <Modal.Header closeButton>
         <Modal.Title>매칭할래멍</Modal.Title>
       </Modal.Header>
@@ -123,3 +123,4 @@ const MarkerModal = ({ show, onClose, markerData }) => {
 };
 
 export default MarkerModal;
+  

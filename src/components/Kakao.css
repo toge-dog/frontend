@@ -3,7 +3,9 @@
   position: relative;
   width: 100%;
   height: 80vh; 
-  /* padding-top: px; */
+  margin-bottom: 90px;
+
+
 }
 
 #map {
@@ -13,6 +15,8 @@
   margin: 0 auto; 
   
 }
+
+
 
 .start-matching-button {
   background-color: #ff5722; 
@@ -27,14 +31,13 @@
   left: 50%;
   transform: translateX(-45%);
   z-index: 1000; 
-  
+
 }
 
 .return-current-location {
   background-color: #33a337; 
   color: white;
   border: none;
-  border-radius: 5px;
   padding: 10px 20px;
   font-size: 16px;
   cursor: pointer;
@@ -42,6 +45,11 @@
   bottom: 155px; 
   right: 300px; 
   z-index: 1000;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  font-weight: 600;
+
 }
 
 .laterButton {
@@ -78,14 +86,19 @@ border-radius: 10px;
   background-color: #9b8136; 
   color: white;
   border: none;
-  border-radius: 5px;
   padding: 10px 20px;
-  font-size: 16px;
+ 
   cursor: pointer;
   position: absolute;
   bottom: 155px; 
   left: 300px; 
   z-index: 1000;
+
+
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .currentMatching{
@@ -108,3 +121,16 @@ border-radius: 10px;
   font-size: 25px;
 }
 
+.modal, .matching-modal {
+  position: fixed; /* 화면에 고정 */
+  top: 50%; /* 세로 중앙 */
+  left: 50%; /* 가로 중앙 */
+  transform: translate(-50%, -50%); /* 정확한 중앙 정렬 */
+  z-index: 1000; /* 다른 요소들 위에 표시 */
+  background: white; /* 배경색 */
+  padding: 20px; /* 패딩 */
+  border-radius: 8px; /* 모서리 둥글게 */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* 그림자 */
+  width: 80%; /* 너비 */
+  max-width: 600px; /* 최대 너비 */
+}

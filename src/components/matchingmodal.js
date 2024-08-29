@@ -145,31 +145,32 @@ function ExampleModal() {
 
   return (
     <>
-      <Button
-        variant="primary"
-        onClick={handleShow}
-        style={{
-          backgroundColor: '#4caf50',
-          color: '#ffffff',
-          border: 'none',
-          margin: '0px auto',
-          display: 'block',
-          textAlign: 'center',
-          padding: '10px 20px',
-          borderRadius: '8px',
-          boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
-          fontSize: '16px',
-          fontWeight: '600',
-          zIndex:'133000',
-          transition: 'background-color 0.3s ease'
+   <Button
+  variant="primary"
+  onClick={handleShow}
+  style={{
+    position: 'relative', /* Ensure position is set */
+    backgroundColor: '#FF9800',
+    color: '#ffffff',
+    border: 'none',
+    margin: '-155px auto',
+    display: 'block',
+    textAlign: 'center',
+    padding: '11px 22px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+    fontSize: '16px',
+    fontWeight: '600',
+    zIndex: 100, 
+    transition: 'background-color 0.3s ease'
         }}
-        onMouseEnter={e => e.currentTarget.style.backgroundColor = '#388e3c'}
-        onMouseLeave={e => e.currentTarget.style.backgroundColor = '#4caf50'}
+        onMouseEnter={e => e.currentTarget.style.backgroundColor = '#F9A825'}
+        onMouseLeave={e => e.currentTarget.style.backgroundColor = '##FF9800'}
       >
         🐶 매칭 리스트
       </Button>
 
-      <Modal show={show} onHide={handleClose} size="lg" style={{ zIndex: '1050' }}>
+      <Modal show={show} onHide={handleClose} size="lg" style={{ zIndex: '1050' }} dialogClassName="modal-dialog-centered">
         <Modal.Header closeButton>
           <Modal.Title>🐶매칭 목록🐶</Modal.Title>
         </Modal.Header>
@@ -235,3 +236,4 @@ function ExampleModal() {
 }
 
 export default ExampleModal;
+  
