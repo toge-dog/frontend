@@ -9,7 +9,6 @@
 #map {
   position: relative;
   width: 85%; /* 지도 너비를 85%로 설정 */
-  height: 85%;
   margin: 0 auto; 
   
 }

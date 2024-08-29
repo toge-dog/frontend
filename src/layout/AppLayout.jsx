@@ -49,7 +49,7 @@ const AppLayout = () => {
   };
 
   // 펫 프로필 이미지를 가져오기
-  const petImage = user?.pets?.[0]?.petProfileImage;
+  const petImage = user?.pets?.[0]?.petProfileImage || 'src/assets/로아시바견.png';
   // user 닉네임 가져오기
   const nickName = user?.nickName;
 
@@ -123,7 +123,6 @@ const PageWrapper = styled.div`
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-
 `;
 
 const StyledNavbar = styled.nav`
