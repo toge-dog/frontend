@@ -64,7 +64,7 @@ const MarkerModal = ({ show, onClose, markerData }) => {
   const isButtonDisabled = loading || matchStatus === 'MatchRegistered';
 
   return (
-    <Modal show={show} onHide={onClose} contentClassName="custom-modal">
+    <Modal show={show} onHide={onClose} className="custom-modal">
       <Modal.Header closeButton>
         <Modal.Title>매칭할래멍</Modal.Title>
       </Modal.Header>
@@ -72,10 +72,12 @@ const MarkerModal = ({ show, onClose, markerData }) => {
         {markerData ? (
           <>
             {/* 사용자 정보 */}
-            <h4>보호자님 정보</h4>
-            <p>닉네임: {markerData.data.memberNickname}</p>
-            <p>생년월일: {markerData.data.memberYearOfBirth}</p>
-            <p>성별: {markerData.data.memberGender}</p>
+            <div className="user-info">
+              <h4>보호자님 정보</h4>
+              <p><strong>닉네임:</strong> {markerData.data.memberNickname}</p>
+              <p><strong>생년월일:</strong> {markerData.data.memberYearOfBirth}</p>
+              <p><strong>성별:</strong> {markerData.data.memberGender}</p>
+            </div>
 
             {/* 펫 ID 카드 */}
             <div className="pet-id-card">
