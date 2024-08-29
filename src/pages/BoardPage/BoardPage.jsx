@@ -110,21 +110,21 @@ const BoardPage = () => {
       <Table>
         <thead>
           <tr>
-            <Th>번호</Th>
-            <Th>제목</Th>
-            <Th>작성자</Th>
-            <Th>작성일</Th>
-            <Th>조회수</Th>
+            <Th width="10%">번호</Th>
+            <Th width="50%">제목</Th> 
+            <Th width="15%">작성자</Th> 
+            <Th width="15%">작성일</Th>
+            <Th width="10%">조회수</Th> 
           </tr>
         </thead>
         <tbody>
           {posts.map((post, index) => (
             <tr key={post.boardId} onClick={() => navigate(`/boards/${boardType}/${post.boardId}`)}>
-              <Td>{index + 1}</Td>
-              <Td>{post.title || '(제목 없음)'}</Td>
-              <Td>{post.author || '익명'}</Td>
-              <Td>{new Date(post.createdAt).toLocaleDateString()}</Td>
-              <Td>{post.viewCount ?? 0}</Td>
+              <Td width="10%">{index + 1}</Td>
+              <Td width="50%">{post.title || '(제목 없음)'}</Td>
+              <Td width="15%">{post.author || '익명'}</Td>
+              <Td width="15">{new Date(post.createdAt).toLocaleDateString()}</Td>
+              <Td width="10%">{post.viewCount ?? 0}</Td>
             </tr>
           ))}
         </tbody>

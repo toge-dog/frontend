@@ -149,16 +149,24 @@ export const GridContainer = styled.div`
 export const GridItem = styled.div`
   cursor: pointer;
   transition: transform 0.2s;
+  background-color: #fff;  /* 배경색을 설정하여 그림자가 잘 보이도록 */
+  border-radius: 8px;  /* 코너를 부드럽게 둥글게 처리 */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08); /* 그림자 효과 */
+  transition: box-shadow 0.3s ease;  /* 마우스를 올렸을 때 부드럽게 그림자가 변하는 효과 */
+
   
   &:hover {
     transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);  /* 마우스 호버 시 더 진한 그림자 효과 */
   }
 `;
 
 export const ImageContainer = styled.div`
   width: 100%;
-  height: 200px;
+  max-width: 150px; 
+  max-height: 150px; 
   overflow: hidden;
+  margin: 0 auto;
   
   img {
     width: 100%;
