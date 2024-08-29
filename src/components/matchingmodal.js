@@ -28,12 +28,12 @@ function ListItem({ petImg, name, createdAt, status, mode, matchingDone, setMatc
           setMatchingDone(true);
         }
       } catch (error) {
-        console.error('Error while patching:', error);
+        console.error('Error while patching1:', error);
       }
     }
   };
 
-  // 버튼 클릭 시 색상을 변경하는 함수 (Guest)
+  // 버튼 클릭 시 색상을 변경하는 함수 (Guest) ㅎㅇ
   const handleGuestButtonClick = async () => {
     const confirmResult = window.confirm('정말로 매칭요청을 취소하시겠습니까?');
 
