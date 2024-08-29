@@ -9,6 +9,7 @@
 #map {
   position: relative;
   width: 85%; /* 지도 너비를 85%로 설정 */
+  height: 85%;
   margin: 0 auto; 
   
 }
@@ -106,10 +107,4 @@ border-radius: 10px;
   top: -22px;
   font-size: 25px;
 }
-
-.currentMatching{
-  padding-bottom: 20px;
-}
-
-
 
