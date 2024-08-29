@@ -134,7 +134,7 @@ const Card = styled.div`
 
 const CardImage = styled.img`
   width: 100%;
-  height: 200px;
+  height: 400px;
   object-fit: cover;
   border-radius: 8px 8px 0 0; /* 상단 모서리만 둥글게 */
 `;
