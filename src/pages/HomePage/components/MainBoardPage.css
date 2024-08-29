@@ -20,4 +20,15 @@
   .next-btn {
     right: 0;
   }
+
+  .icon-image {
+    width: 100px; /* 원하는 너비 */
+    height: auto; /* 비율을 유지하며 높이를 자동 조절 */
+    margin: 20px;
+  }
   
+  .text-image {
+    width: 600px; /* 원하는 너비 */
+    height: auto;
+    padding-left: 30px;
+  }

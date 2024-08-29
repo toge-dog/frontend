@@ -134,23 +134,23 @@ const BoardPage = () => {
     <Table>
       <thead>
         <tr>
-          <Th>번호</Th>
-          <Th>제목</Th>
-          <Th>작성자</Th>
-          <Th>조회수</Th>
-          <Th>좋아요</Th>
-          <Th>상태</Th>
+          <Th width="10%">번호</Th>
+          <Th width="40%">제목</Th> 
+          <Th width="15%">작성자</Th> 
+          <Th width="10%">조회수</Th> 
+          <Th width="10%">좋아요</Th> 
+          {/* <Th width="15%">상태</Th>  */}
         </tr>
       </thead>
       <tbody>
         {posts.map((post, index) => (
           <tr key={post.boardId} onClick={() => navigate(`/boards/${boardType}/${post.boardId}`)}>
-            <Td>{index + 1}</Td>
-            <Td>{post.title || '(제목 없음)'}</Td>
-            <Td>{post.author || '익명'}</Td>
-            <Td>{post.viewCount ?? 0}</Td>
-            <Td>{post.likesCount ?? 0}</Td>
-            <Td>{post.boardStatus || '기본 상태'}</Td>
+            <Td width="10%">{index + 1}</Td>
+            <Td width="40%">{post.title || '(제목 없음)'}</Td>
+            <Td width="15%">{post.author || '익명'}</Td>
+            <Td width="10%">{post.viewCount ?? 0}</Td>
+            <Td width="10%">{post.likesCount ?? 0}</Td>
+            {/* <Td width="15%">{post.boardStatus || '기본 상태'}</Td> */}
           </tr>
         ))}
       </tbody>
