@@ -3,7 +3,7 @@
   position: relative;
   width: 100%;
   height: 80vh; 
-  margin-bottom: 80px;
+  /* padding-top: px; */
 }
 
 #map {
@@ -18,11 +18,11 @@
   color: white;
   border: none;
   border-radius: 5px;
-  padding: 14px 30px;
+  padding: 18px 35px;
   font-size: 18px;
   cursor: pointer;
   position: absolute;
-  bottom: 135px; 
+  bottom: 150px; 
   left: 50%;
   transform: translateX(-45%);
   z-index: 1000; 
@@ -30,7 +30,7 @@
 }
 
 .return-current-location {
-  background-color: #4caf50; 
+  background-color: #33a337; 
   color: white;
   border: none;
   border-radius: 5px;
@@ -38,41 +38,43 @@
   font-size: 16px;
   cursor: pointer;
   position: absolute;
-  bottom: 140px; 
+  bottom: 155px; 
   right: 300px; 
   z-index: 1000;
 }
 
 .laterButton {
   padding:px 20px;
-  background-color: #eee196 ;
+  background-color: #b6cef6 ;
   border : none;
   color: #0b550b;
   font-weight: bold;
 margin-left: 10px;
+border-radius: 10px;
 
 }
 
 .laterButton:hover {
-  color: #967922;
+  color: #225896;
  
 }
 
 .goButton:hover {
-  color: #967922;
+  color: #225896;
 }
 
 
 .goButton{
   padding:px 15px;
-  background-color: #eee196 ;
+  background-color: #b6cef6 ;
   border : none;
   color: #72453e;
   font-weight: bold;
+  border-radius: 10px;
 }
 
 .create-marker-button {
-  background-color: #967922; 
+  background-color: #9b8136; 
   color: white;
   border: none;
   border-radius: 5px;
@@ -80,7 +82,7 @@ margin-left: 10px;
   font-size: 16px;
   cursor: pointer;
   position: absolute;
-  bottom: 140px; 
+  bottom: 155px; 
   left: 300px; 
   z-index: 1000;
 }
@@ -96,3 +98,18 @@ margin-left: 10px;
   border-radius: 13px;
   border: none;
 }
+
+
+.claosModal{
+  position: relative;
+  right: -130px;
+  top: -22px;
+  font-size: 25px;
+}
+
+.currentMatching{
+  padding-bottom: 20px;
+}
+
+
+
