@@ -51,7 +51,7 @@ const KakaoMap = () => {
   const displayCurrentMarker = useCallback(
     (locPosition) => {
       const imageSrc = 'https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjBP7MfoUaEkIg335-IYcfo4-hN7uEDRnms72umPOUQ_cVS0NaFwUYT0Ea6aRCS6abUCN12d-QoxTFFsF-VK5BARj-aOR5FG1hmWrQuHdRSzFKBxklRq1ZvRSVqs1sRMR6yAQIXfNh7mTgQ/s2000/red.png';
-      const imageSize = new kakao.maps.Size(40, 40);
+      const imageSize = new kakao.maps.Size(50, 40);
       const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
       const marker = new kakao.maps.Marker({
         map: map,

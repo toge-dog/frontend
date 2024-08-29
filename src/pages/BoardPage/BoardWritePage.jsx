@@ -2,17 +2,11 @@ import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { 
-    Container, 
-    Title, 
-    Form, 
-    Input, 
-    TextArea, 
-    SubmitButton, 
-    ImagePreview, 
-    ImageUploadButton,
-    ButtonContainer,
-    SubmitButtonContainer
-} from './BoardStyles';
+  Container, 
+  Form, 
+  Button, 
+  Alert 
+} from 'react-bootstrap';
 import { useAuth } from '../../hooks/useAuth';
 
 const BoardWritePage = () => {
@@ -77,8 +71,6 @@ const BoardWritePage = () => {
       boardType: boardType.toUpperCase()
     };
   
-    console.log('Payload data:', JSON.stringify(data));
-  
     try {
       const response = await axios.post(`http://localhost:8080/boards/${boardType}`, data, {
         headers: {
@@ -86,25 +78,13 @@ const BoardWritePage = () => {
           'Authorization': `Bearer ${getToken()}`
         }
       });
-      console.log('Response:', response);
 
       const boardId = response.headers.location.split('/').pop();
       
       navigate(`/boards/${boardType}?newPost=true&postId=${boardId}`);
     } catch (error) {
       console.error('게시글 작성에 실패했습니다:', error);
-      if (error.response) {
-        console.log('서버 응답 데이터:', error.response.data);
-        console.log('서버 응답 상태:', error.response.status);
-        console.log('서버 응답 헤더:', error.response.headers);
-        alert(`게시글 작성에 실패했습니다. 오류: ${error.response.data.error || '알 수 없는 오류'}`);
-      } else if (error.request) {
-        console.log('요청이 전송되었지만 응답을 받지 못했습니다:', error.request);
-        alert('서버에서 응답이 없습니다. 네트워크 연결을 확인해주세요.');
-      } else {
-        console.log('오류 발생:', error.message);
-        alert('게시글 작성 중 오류가 발생했습니다.');
-      }
+      alert(`게시글 작성에 실패했습니다. 오류: ${error.response?.data?.error || '알 수 없는 오류'}`);
     }
   };
 
@@ -113,42 +93,53 @@ const BoardWritePage = () => {
   };
 
   return (
-    <Container>
-      <Title>{getBoardTitle(boardType)}</Title>
+    <Container className="my-4">
+      <h1 className="mb-4">{getBoardTitle(boardType)}</h1>
       <Form onSubmit={handleSubmit}>
-        <Input
-          type="text"
-          placeholder="제목"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          required
-        />
-        <TextArea
-          placeholder="내용"
-          value={content}
-          onChange={(e) => setContent(e.target.value)}
-          required
-        />
-        <input
-          type="file"
-          ref={fileInputRef}
-          onChange={handleImageChange}
-          accept="image/*"
-          style={{ display: 'none' }}
-        />
-        <ButtonContainer>
-          <ImageUploadButton type="button" onClick={handleImageUploadClick}>
+        <Form.Group className="mb-3">
+          <Form.Control
+            type="text"
+            placeholder="제목"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Control
+            as="textarea"
+            rows={5}
+            placeholder="내용"
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            required
+          />
+        </Form.Group>
+        <Form.Group className="mb-3">
+          <Form.Control
+            type="file"
+            ref={fileInputRef}
+            onChange={handleImageChange}
+            accept="image/*"
+            style={{ display: 'none' }}
+          />
+          <Button variant="secondary" onClick={handleImageUploadClick}>
             이미지 업로드
-          </ImageUploadButton>
-        </ButtonContainer>
-        {imagePreview && (
-          <ImagePreview>
-            <img src={imagePreview} alt="Preview" style={{ maxWidth: '100%', maxHeight: '200px' }} />
-          </ImagePreview>
-        )}
-        <SubmitButtonContainer>
-          <SubmitButton type="submit">작성완료</SubmitButton>
-        </SubmitButtonContainer>
+          </Button>
+          {imagePreview && (
+            <div className="mt-3">
+              <img
+                src={imagePreview}
+                alt="Preview"
+                className="img-fluid"
+                style={{ maxHeight: '200px' }}
+              />
+            </div>
+          )}
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          작성완료
+        </Button>
       </Form>
     </Container>
   );

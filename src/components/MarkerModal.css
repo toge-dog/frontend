@@ -1,0 +1,127 @@
+/* 전체 모달 스타일 */
+.custom-modal .modal-content {
+    border-radius: 20px;
+    background-color: #fffaf0;
+    border: none;
+    padding: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    font-family: 'Ghibli', sans-serif;
+    position: relative; 
+}
+
+.pet-id-card {
+    border: 3px solid #6b4226;
+    border-radius: 20px;
+    background: linear-gradient(135deg, #ffe8d6 0%, #fff 100%), url('https://png.pngtree.com/png-vector/20220708/ourmid/pngtree-illustration-of-a-dogs-paw-print-stamp-for-a-new-year-greeting-card-vector-png-image_32570518.png') no-repeat center center;
+    background-size: cover;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+}
+
+.pet-id-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.3);
+    mix-blend-mode: screen;
+    pointer-events: none;
+    animation: sparkle 1.5s infinite;
+}
+
+@keyframes sparkle {
+    0% {
+        opacity: 0;
+        transform: scale(1) translate(0, 0);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.2) translate(-10px, -10px);
+    }
+    100% {
+        opacity: 0;
+        transform: scale(1) translate(10px, 10px);
+    }
+}
+
+.pet-id-card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.pet-id-card-header {
+    text-align: center;
+}
+
+.pet-name {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: center;
+    margin: 0;
+}
+
+.pet-id-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(0,0,0,0.1) 50%, rgba(255,255,255,0.2) 100%);
+    opacity: 0.3;
+    transform: rotate(-30deg);
+    pointer-events: none;
+    animation: holoAnim 3s infinite linear;
+}
+
+@keyframes holoAnim {
+    0% { transform: rotate(-30deg) translateX(-100%); }
+    100% { transform: rotate(-30deg) translateX(100%); }
+}
+
+.certification-stamp {
+    position: absolute;
+    bottom: -20px;
+    right: -20px;
+    transform: rotate(-15deg);
+    width: 100px;
+    height: 100px;
+    background-color: transparent;
+}
+
+.certification-stamp img {
+    width: 100%;
+    height: auto;
+    opacity: 0.7;
+}
+
+/* 버튼 스타일 */
+.cute-button {
+    background-color: #f7a8a8;
+    border: none;
+    border-radius: 30px;
+    padding: 12px 25px;
+    font-size: 1.2rem;
+    color: white;
+    font-family: 'Ghibli', sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    text-align: center;
+    transition: all 0.3s ease;
+    margin-top: 20px;
+}
+
+.cute-button:hover {
+    background-color: #ff7f7f;
+    transform: scale(1.05);
+}
+
+.cute-button:disabled {
+    background-color: #d3d3d3;
+    cursor: not-allowed;
+    box-shadow: none;
+}

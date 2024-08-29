@@ -30,9 +30,9 @@ const HomePage = () => {
   return (
     <Main>
         <BannerImage src={banner} alt="Home Banner" />
-        <KakaoMap style={{ zIndex: 1}} />
-        <MainBoardPage style={{ zIndex: 1}}/>
-        <MainBoardPage style={{ zIndex: 1}}/>
+        <KakaoMap  />
+        <MainBoardPage />
+        <MainBoardPage/>
     </Main>
   ); 
 };
@@ -47,7 +47,6 @@ const BannerImage = styled.img`
   max-height: 1792px;
   object-fit: cover;
   margin-top: 0px;
-  z-index: 1;
 `;
 
 const UserInfoContainer = styled.div`
