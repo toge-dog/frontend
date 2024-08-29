@@ -1,4 +1,4 @@
-/* 전체 모달 스타일 */
+/* Modal 기본 스타일 */
 .custom-modal .modal-content {
     border-radius: 20px;
     background-color: #fffaf0;
@@ -9,6 +9,12 @@
     position: relative; 
 }
 
+/* Modal 제목 스타일 */
+.custom-modal .modal-title {
+    text-align: center;
+}
+
+/* 펫 ID 카드 스타일 */
 .pet-id-card {
     border: 3px solid #6b4226;
     border-radius: 20px;
@@ -19,6 +25,7 @@
     overflow: hidden;
 }
 
+/* 반짝이 효과 */
 .pet-id-card::before {
     content: '';
     position: absolute;
@@ -47,6 +54,7 @@
     }
 }
 
+/* 펫 ID 카드 제목 스타일 */
 .pet-id-card-title {
     font-size: 1.5rem;
     font-weight: bold;
@@ -54,10 +62,12 @@
     margin-bottom: 20px;
 }
 
+/* 펫 ID 카드 헤더 스타일 */
 .pet-id-card-header {
     text-align: center;
 }
 
+/* 펫 이름 스타일 */
 .pet-name {
     font-size: 1.2rem;
     font-weight: bold;
@@ -65,6 +75,7 @@
     margin: 0;
 }
 
+/* 홀로그램 애니메이션 */
 .pet-id-card::after {
     content: '';
     position: absolute;
@@ -84,6 +95,7 @@
     100% { transform: rotate(-30deg) translateX(100%); }
 }
 
+/* 인증 도장 스타일 */
 .certification-stamp {
     position: absolute;
     bottom: -20px;
@@ -100,8 +112,8 @@
     opacity: 0.7;
 }
 
-/* 버튼 스타일 */
-.cute-button {
+/* 버튼 기본 스타일 */
+.button {
     background-color: #f7a8a8;
     border: none;
     border-radius: 30px;
@@ -115,12 +127,14 @@
     margin-top: 20px;
 }
 
-.cute-button:hover {
+/* 버튼 호버 상태 스타일 */
+.button:hover {
     background-color: #ff7f7f;
     transform: scale(1.05);
 }
 
-.cute-button:disabled {
+/* 버튼 비활성화 상태 스타일 */
+.button:disabled {
     background-color: #d3d3d3;
     cursor: not-allowed;
     box-shadow: none;

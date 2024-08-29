@@ -166,7 +166,7 @@ const KakaoMap = () => {
           position: location,
           image: new kakao.maps.MarkerImage(
             'https://icons.veryicon.com/png/256/application/font-awesome/paw-5.png',
-            new kakao.maps.Size(40, 35)
+            new kakao.maps.Size(50, 45)
           ),
         });
         alert('매칭이 등록되었습니다!');
@@ -199,7 +199,7 @@ const KakaoMap = () => {
         const position = new kakao.maps.LatLng(marker.latitude, marker.longitude);
         const markerEmail = marker.email.replace('marker:', '');
         const markerImageSrc = markerEmail === userEmail
-          ? 'https://cdn.iconscout.com/icon/premium/png-256-thumb/puppy-3420741-2854815.png?f=webp'
+          ? 'https://icons.veryicon.com/png/256/application/font-awesome/paw-5.png'
           : 'https://icons.veryicon.com/png/o/animal/pet-it/take-a-walk.png';
 
         const markerInstance = new kakao.maps.Marker({
