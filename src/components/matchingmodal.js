@@ -169,7 +169,7 @@ function ExampleModal() {
         🐶 매칭 리스트
       </Button>
 
-      <Modal show={show} onHide={handleClose} size="lg" style={{ zIndex: '1050' }}>
+      <Modal show={show} onHide={handleClose} size="lg" style={{ zIndex: '1050' }} dialogClassName="modal-dialog-centered">
         <Modal.Header closeButton>
           <Modal.Title>🐶매칭 목록🐶</Modal.Title>
         </Modal.Header>

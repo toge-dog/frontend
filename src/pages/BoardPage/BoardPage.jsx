@@ -10,6 +10,10 @@ import {
   Th,
   Td,
   WriteButton,
+  GridContainer,
+  GridItem,
+  ImageContainer,
+  AuthorName,
   Pagination,
   PageButton,
   ContentContainer,
@@ -29,7 +33,7 @@ const BoardPage = () => {
   const { boardType } = useParams();
   const location = useLocation();
 
-  const postsPerPage = 10;
+  const postsPerPage = boardType === 'boast' ? 6 : 10;
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -88,6 +92,38 @@ const BoardPage = () => {
     }
   };
 
+  const fetchUserInfo = async () => {
+    try {
+      const response = await axios.get('http://localhost:8080/member', {
+        headers: {
+          Authorization: `Bearer ${getToken()}`
+        }
+      });
+      return response.data;
+    } catch (error) {
+      if (error.response) {
+        // 서버가 응답을 보냈지만 상태 코드가 2xx 범위가 아닌 경우
+        console.error('서버 응답 오류:', error.response.status);
+      } else if (error.request) {
+        // 요청이 만들어졌지만 응답을 받지 못한 경우
+        console.error('서버로부터 응답이 없습니다:', error.request);
+      } else {
+        // 요청 설정 중에 오류가 발생한 경우
+        console.error('요청 설정 중 오류:', error.message);
+      }
+      return null;
+    }
+  };
+
+  const { data: userInfo, isPending: userInfoLoading, isError: userInfoError } = useQuery({
+    queryKey: ['userInfo'],
+    queryFn: fetchUserInfo,
+    enabled: isLoggedIn,
+    staleTime: 5 * 60 * 1000,
+    gcTime: 60 * 60 * 1000,
+    retry: 1,
+  });
+
   const handleWriteClick = () => {
     if (isLoggedIn) {
       navigate(`/boards/${boardType}/write`);
@@ -96,6 +132,21 @@ const BoardPage = () => {
       navigate('/login', { state: { from: `/boards/${boardType}` } });
     }
   };
+
+  console.log(posts);
+
+  const renderBoastBoard = () => (
+    <GridContainer>
+      {posts.map((post) => (
+        <GridItem key={post.boardId} onClick={() => navigate(`/boards/${boardType}/${post.boardId}`)}>
+          <ImageContainer>
+            <img src={post.contentImg || '/placeholder-image.jpg'} alt={post.title || '이미지'} />
+          </ImageContainer>
+          <AuthorName>{post.author || '익명'}</AuthorName>
+        </GridItem>
+      ))}
+    </GridContainer>
+  );
 
   const renderOtherBoard = () => (
     <>
@@ -136,7 +187,7 @@ const BoardPage = () => {
     const pageNumbers = [];
     let startPage = Math.max(1, currentPage - 2);
     let endPage = Math.min(totalPages, startPage + 5);
-
+    
     if (endPage - startPage < 5 && startPage > 1) {
       startPage = Math.max(1, endPage - 5);
     }
@@ -169,7 +220,7 @@ const BoardPage = () => {
         {loading ? (
           <p>게시글을 불러오는 중입니다.</p>
         ) : posts.length > 0 ? (
-          renderOtherBoard()
+          boardType === 'boast' ? renderBoastBoard() : renderOtherBoard()
         ) : (
           <p>게시글이 없습니다.</p>
         )}
@@ -181,5 +232,4 @@ const BoardPage = () => {
     </Container>
   );
 };
-
 export default BoardPage;

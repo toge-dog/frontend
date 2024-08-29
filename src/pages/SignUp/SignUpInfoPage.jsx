@@ -569,7 +569,7 @@ const SignUpPage = () => {
           <SubmitButton type="submit">회원가입</SubmitButton>
         </StyledForm>
 
-        <Modal show={showAddressModal} onHide={() => setShowAddressModal(false)}>
+        <Modal show={showAddressModal} onHide={() => setShowAddressModal(false)} dialogClassName="modal-dialog-centered">
           <Modal.Header closeButton>
             <Modal.Title>주소 검색</Modal.Title>
           </Modal.Header>
