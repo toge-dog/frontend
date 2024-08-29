@@ -105,7 +105,6 @@ const BoardDetailPage = () => {
   );
 
   if (isError) {
-    console.error("Error loading post:", error.message);
     return <div>게시글을 불러오는데 오류가 발생했습니다: {error.message}</div>;
   }
 
@@ -119,7 +118,7 @@ const BoardDetailPage = () => {
       <Title>{post.title}</Title>
       <Meta>
         <span>작성자: {post.author}</span>
-        <span>작성일: {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : '알 수 없음'}</span>
+        <span>작성일: {post.createdAt ? new Date(post.createdAt).toLocaleDateString() : '2024-08-29'}</span>
         <span>조회수: {post.viewCount || 0}</span>
         <span>
           좋아요: {post.likesCount || 0}
@@ -140,7 +139,7 @@ const BoardDetailPage = () => {
             <CommentItem key={comment.commentId}>
               <p>{comment.comment}</p>
               <CommentAuthor>{comment.name || '알 수 없음'}</CommentAuthor>
-              <CommentDate>{comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : '작성일 정보 없음'}</CommentDate>
+              <CommentDate>{comment.createdAt ? new Date(comment.createdAt).toLocaleDateString() : '2024-08-29'}</CommentDate>
             </CommentItem>
           ))
         ) : (

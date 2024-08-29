@@ -75,7 +75,6 @@ const BoardPage = () => {
       setTotalPages(response.data.pageInfo?.totalPages || 1);
       setCurrentPage(page);
     } catch (error) {
-      console.error('게시글을 불러오는데 실패했습니다:', error);
       setPosts([]);
     } finally {
       setLoading(false);

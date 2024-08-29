@@ -53,7 +53,6 @@ const BoardWritePage = () => {
       });
       return response.data; // Assuming the response contains the image URL
     } catch (error) {
-      console.error('이미지 업로드 실패:', error);
       alert('이미지 업로드에 실패했습니다.');
       return null;
     }
@@ -83,7 +82,6 @@ const BoardWritePage = () => {
       
       navigate(`/boards/${boardType}?newPost=true&postId=${boardId}`);
     } catch (error) {
-      console.error('게시글 작성에 실패했습니다:', error);
       alert(`게시글 작성에 실패했습니다. 오류: ${error.response?.data?.error || '알 수 없는 오류'}`);
     }
   };
