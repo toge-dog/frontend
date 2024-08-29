@@ -84,6 +84,7 @@
     100% { transform: rotate(-30deg) translateX(100%); }
 }
 
+/* 인증 도장 스타일 */
 .certification-stamp {
     position: absolute;
     bottom: -20px;
